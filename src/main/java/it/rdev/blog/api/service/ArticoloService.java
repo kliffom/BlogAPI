@@ -9,4 +9,8 @@ public interface ArticoloService {
 	List<ArticoloDTO> getAllArticoli();
 	
 	List<ArticoloDTO> getAllArticoliPubblicati();
+	
+	List<ArticoloDTO> getAllArticoliByUser(String username);
+	
+	ArticoloDTO getArticoloById(long id);
 }

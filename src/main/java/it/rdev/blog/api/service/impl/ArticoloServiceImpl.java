@@ -2,6 +2,7 @@ package it.rdev.blog.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,66 @@ public class ArticoloServiceImpl implements ArticoloService{
 		}
 		
 		return allArticoliDto;
+	}
+
+	@Override
+	public List<ArticoloDTO> getAllArticoliByUser(String username) {
+		
+		logger.info("getAllArticoliByUser(" + username + ") called. Retrieving informations.");
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByUser(username);
+		
+		List<ArticoloDTO> allArticoliDto = new ArrayList<>();
+		for(Articolo art: allArticoli) {
+			
+			User userEn = userDao.findByUsername(art.getUser().getUsername());
+			UserDTO user = new UserDTO().setUsername(userEn.getUsername());
+			
+			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
+			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
+			
+			ArticoloDTO artDto = new ArticoloDTO()
+					.setId(art.getId())
+					.setTitolo(art.getTitolo())
+					.setSottotitolo(art.getSottotitolo())
+					.setTesto(art.getTesto())
+					.setBozza(art.isBozza())
+					.setData_creazione(art.getData_creazione())
+					.setData_pubblicazione(art.getData_pubblicazione())
+					.setData_modifica(art.getData_modifica())
+					.setUser(user) 
+					.setCategoria(categoria);
+			allArticoliDto.add(artDto);
+		}
+		
+		return allArticoliDto;
+	}
+
+	@Override
+	public ArticoloDTO getArticoloById(long id) {
+	
+		logger.info("getArticoloById(" + id + ") called. Retrieving informations.");
+		Optional<Articolo> artResult = articoloDao.findById(id);
+		Articolo art = artResult.get();
+		
+		User userEn = userDao.findByUsername(art.getUser().getUsername());
+		UserDTO user = new UserDTO().setUsername(userEn.getUsername());
+		
+		Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
+		CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
+		
+		ArticoloDTO artDto = new ArticoloDTO()
+				.setId(art.getId())
+				.setTitolo(art.getTitolo())
+				.setSottotitolo(art.getSottotitolo())
+				.setTesto(art.getTesto())
+				.setBozza(art.isBozza())
+				.setData_creazione(art.getData_creazione())
+				.setData_pubblicazione(art.getData_pubblicazione())
+				.setData_modifica(art.getData_modifica())
+				.setUser(user)
+				.setCategoria(categoria);
+		
+		return artDto;
 	}
 
 }

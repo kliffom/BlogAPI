@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,14 +33,10 @@ public class ArticoloController {
 			username = jwtUtil.getUsernameFromToken(token);
 		}
 		
-		// Qui posso usare username
-		// Se username==null -> utente anonimo
-		// Se username!=null -> utente loggato
-		
 		List<ArticoloDTO> allArtic = null;
 		
 		if(username!=null) {
-			allArtic = articoloServiceImpl.getAllArticoli();
+			allArtic = articoloServiceImpl.getAllArticoliByUser(username);
 		}
 		else { //utente anonimo, prendo solo gli articoli pubblicati
 			allArtic = articoloServiceImpl.getAllArticoliPubblicati();
@@ -49,5 +46,42 @@ public class ArticoloController {
 			return (ResponseEntity<?>) ResponseEntity.notFound();
 		else
 			return ResponseEntity.ok(allArtic);
+	}
+	
+	@RequestMapping(value="/articolo/{id:\\d+}", method = RequestMethod.GET)
+	public ResponseEntity<?> getArticoloById(@PathVariable final Long id, @RequestHeader(name = "Authorization", required = false) String token) {
+		
+		String username = getUsernameFromToken(token);
+		
+		ArticoloDTO artic = articoloServiceImpl.getArticoloById(id);
+		if(artic==null)
+			return (ResponseEntity<?>) ResponseEntity.notFound();
+		else {
+			if(username==null) 
+				if(!artic.isBozza())
+					return ResponseEntity.ok(artic);
+				else
+					return (ResponseEntity<?>) ResponseEntity.notFound();
+			else {
+				if(artic.isBozza() && artic.getUser().getUsername().equals(username)) {
+					return ResponseEntity.ok(artic);
+				}
+				else {
+					return (ResponseEntity<?>) ResponseEntity.notFound();
+				}
+			}
+		}
+	}
+	
+	private String getUsernameFromToken(String token) {
+		
+		String username = null;
+		
+		if(token!=null && token.startsWith("Bearer")) {
+			token = token.replaceAll("Bearer ", "");
+			username = jwtUtil.getUsernameFromToken(token);
+		}
+		
+		return username;
 	}
 }

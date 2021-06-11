@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import it.rdev.blog.api.dao.entity.Articolo;
@@ -22,5 +23,16 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	
 	@Query("SELECT a FROM Articolo a WHERE a.bozza = FALSE")
 	List<Articolo> findAllPubblicati();
+	
+	@Query("SELECT a FROM Articolo a WHERE a.id NOT IN ("
+			+ "SELECT a1.id FROM Articolo a1 "
+			+ "JOIN a1.user u "
+			+ "WHERE "
+			+ "u.username!=:username AND "
+			+ "a1.bozza = TRUE"
+			+ ")")
+	List<Articolo> findAllByUser(@Param("username") String username);
+	
+	
 	
 }

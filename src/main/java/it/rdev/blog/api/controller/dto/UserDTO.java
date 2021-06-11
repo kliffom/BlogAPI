@@ -1,8 +1,11 @@
 package it.rdev.blog.api.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserDTO {
 	
 	private String username;
+	@JsonIgnore
 	private String password;
 
 	public String getUsername() {
