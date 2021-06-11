@@ -8,8 +8,9 @@ public class TagDTO {
 		return nome;
 	}
 
-	public void setNome(String nome) {
+	public TagDTO setNome(String nome) {
 		this.nome = nome;
+		return this;
 	}
 	
 	

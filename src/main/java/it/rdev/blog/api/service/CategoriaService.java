@@ -9,5 +9,5 @@ public interface CategoriaService {
 
 	List<CategoriaDTO> getAllCategorie();
 	
-	Categoria getCategoriaByDescrizione(String descrizione);
+	CategoriaDTO getCategoriaByDescrizione(String descrizione);
 }

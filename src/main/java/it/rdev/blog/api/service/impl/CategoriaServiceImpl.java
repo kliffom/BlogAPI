@@ -24,6 +24,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 	@Override
 	public List<CategoriaDTO> getAllCategorie() {
 		
+		logger.info("getAllCategorie() called. Retrieving informations.");
 		List<Categoria> allCat = (List<Categoria>) categoriaDao.findAll();
 		
 		List<CategoriaDTO> allCatDto = new ArrayList<>();
@@ -36,7 +37,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 	}
 
 	@Override
-	public Categoria getCategoriaByDescrizione(String descrizione) {
+	public CategoriaDTO getCategoriaByDescrizione(String descrizione) {
 		// TODO Auto-generated method stub
 		return null;
 	}
