@@ -18,10 +18,6 @@ public interface TagDao extends CrudRepository<Tag, String>{
 	 */
 	Tag findByNome(String nome);
 	
-	/**
-	 * Restituisce una List<Tag> con tutti i tag nel DB
-	 * @return List<{@link Tag}>
-	 */
-	List<Tag> findAll();
+	
 	
 }

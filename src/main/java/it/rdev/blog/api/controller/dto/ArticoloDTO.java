@@ -15,50 +15,58 @@ public class ArticoloDTO {
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public ArticoloDTO setId(long id) {
 		this.id = id;
+		return this;
 	}
 	public String getTitolo() {
 		return titolo;
 	}
-	public void setTitolo(String titolo) {
+	public ArticoloDTO setTitolo(String titolo) {
 		this.titolo = titolo;
+		return this;
 	}
 	public String getSottotitolo() {
 		return sottotitolo;
 	}
-	public void setSottotitolo(String sottotitolo) {
+	public ArticoloDTO setSottotitolo(String sottotitolo) {
 		this.sottotitolo = sottotitolo;
+		return this;
 	}
 	public String getTesto() {
 		return testo;
 	}
-	public void setTesto(String testo) {
+	public ArticoloDTO setTesto(String testo) {
 		this.testo = testo;
+		return this;
 	}
 	public boolean isBozza() {
 		return bozza;
 	}
-	public void setBozza(boolean bozza) {
+	public ArticoloDTO setBozza(boolean bozza) {
 		this.bozza = bozza;
+		return this;
 	}
 	public Date getData_creazione() {
 		return data_creazione;
 	}
-	public void setData_creazione(Date data_creazione) {
+	public ArticoloDTO setData_creazione(Date data_creazione) {
 		this.data_creazione = data_creazione;
+		return this;
 	}
 	public Date getData_pubblicazione() {
 		return data_pubblicazione;
 	}
-	public void setData_pubblicazione(Date data_pubblicazione) {
+	public ArticoloDTO setData_pubblicazione(Date data_pubblicazione) {
 		this.data_pubblicazione = data_pubblicazione;
+		return this;
 	}
 	public Date getData_modifica() {
 		return data_modifica;
 	}
-	public void setData_modifica(Date data_modifica) {
+	public ArticoloDTO setData_modifica(Date data_modifica) {
 		this.data_modifica = data_modifica;
+		return this;
 	}
 	
 	

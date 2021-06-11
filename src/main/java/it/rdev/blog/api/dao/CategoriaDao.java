@@ -17,10 +17,5 @@ public interface CategoriaDao extends CrudRepository<Categoria, String> {
 	 */
 	Categoria findByDescrizione(String descrizione);
 	
-	/**
-	 * Restituisce una List<Categoria> con tutte le categorie nel DB
-	 * @return List<{@link Categoria}>
-	 */
-	//List<Categoria> findAll();
 	
 }
