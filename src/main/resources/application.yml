@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/blog
-    username: root
-    password: rdev
+    url: jdbc:mysql://localhost:3306/Blog
+    username: kliffom
+    password: hurricane
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

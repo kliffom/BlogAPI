@@ -2,6 +2,8 @@ package it.rdev.blog.api.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,17 @@ public class User {
 	@Column
 	@JsonIgnore
 	private String password;
+	
+	@OneToMany(mappedBy="articoli")
+	private Set<Articoli> articoli;
+
+	public Set<Articoli> getArticoli() {
+		return articoli;
+	}
+
+	public void setArticoli(Set<Articoli> articoli) {
+		this.articoli = articoli;
+	}
 
 	public String getUsername() {
 		return username;
