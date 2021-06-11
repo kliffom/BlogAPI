@@ -8,8 +8,9 @@ public class CategoriaDTO {
 		return descrizione;
 	}
 
-	public void setDescrizione(String descrizione) {
+	public CategoriaDTO setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
+		return this;
 	}
 	
 	

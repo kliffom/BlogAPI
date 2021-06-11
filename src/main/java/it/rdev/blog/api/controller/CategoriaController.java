@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.rdev.blog.api.dao.entity.Categoria;
+import it.rdev.blog.api.controller.dto.CategoriaDTO;
 import it.rdev.blog.api.service.impl.CategoriaServiceImpl;
 
 @RestController
@@ -21,7 +21,7 @@ public class CategoriaController {
 	@RequestMapping(value="/categoria", method = RequestMethod.GET)
 	public ResponseEntity<?> getCategorie() {
 		
-		final List<Categoria> allCat = categoriaServiceImpl.getAllCategorie();
+		final List<CategoriaDTO> allCat = categoriaServiceImpl.getAllCategorie();
 		if(allCat!=null)
 			return ResponseEntity.ok(allCat);
 		else
