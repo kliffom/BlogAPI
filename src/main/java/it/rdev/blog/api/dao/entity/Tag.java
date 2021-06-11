@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="tag")
 public class Tag {
@@ -14,6 +16,7 @@ public class Tag {
 	private String nome;
 	
 	@ManyToMany(mappedBy = "tags")
+	@JsonIgnore
 	private Set<Articolo> articoli;
 
 	public String getNome() {

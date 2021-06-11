@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="categoria")
 public class Categoria {
@@ -13,6 +15,7 @@ public class Categoria {
 	private String descrizione;
 	
 	@OneToMany(mappedBy="categoria")
+	@JsonIgnore
 	private Set<Articolo> articoli;
 
 	public String getDescrizione() {
