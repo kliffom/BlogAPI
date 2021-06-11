@@ -13,7 +13,7 @@ public class Categoria {
 	private String descrizione;
 	
 	@OneToMany(mappedBy="articoli")
-	private Set<Articoli> articoli;
+	private Set<Articolo> articoli;
 
 	public String getDescrizione() {
 		return descrizione;
@@ -23,11 +23,11 @@ public class Categoria {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Articoli> getArticoli() {
+	public Set<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articoli> articoli) {
+	public void setArticoli(Set<Articolo> articoli) {
 		this.articoli = articoli;
 	}
 	

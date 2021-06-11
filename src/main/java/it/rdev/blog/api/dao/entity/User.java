@@ -20,13 +20,13 @@ public class User {
 	private String password;
 	
 	@OneToMany(mappedBy="articoli")
-	private Set<Articoli> articoli;
+	private Set<Articolo> articoli;
 
-	public Set<Articoli> getArticoli() {
+	public Set<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articoli> articoli) {
+	public void setArticoli(Set<Articolo> articoli) {
 		this.articoli = articoli;
 	}
 

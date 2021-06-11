@@ -14,7 +14,7 @@ public class Tag {
 	private String nome;
 	
 	@ManyToMany(mappedBy = "articoli")
-	private Set<Articoli> articoli;
+	private Set<Articolo> articoli;
 
 	public String getNome() {
 		return nome;
@@ -24,11 +24,11 @@ public class Tag {
 		this.nome = nome;
 	}
 
-	public Set<Articoli> getArticoli() {
+	public Set<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articoli> articoli) {
+	public void setArticoli(Set<Articolo> articoli) {
 		this.articoli = articoli;
 	}
 	
