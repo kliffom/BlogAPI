@@ -12,7 +12,7 @@ public class Categoria {
 	@Column(name="descrizione")
 	private String descrizione;
 	
-	@OneToMany(mappedBy="articoli")
+	@OneToMany(mappedBy="categoria")
 	private Set<Articolo> articoli;
 
 	public String getDescrizione() {

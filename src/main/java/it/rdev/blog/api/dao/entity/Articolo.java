@@ -37,7 +37,7 @@ public class Articolo {
 	private Date data_modifica;
 	
 	@ManyToOne()
-	@JoinColumn(name="id_categoria", referencedColumnName = "id")
+	@JoinColumn(name="desc_categoria", referencedColumnName = "descrizione")
 	private Categoria categoria;
 	
 	@ManyToOne()

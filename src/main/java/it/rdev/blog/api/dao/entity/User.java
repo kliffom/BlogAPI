@@ -19,7 +19,8 @@ public class User {
 	@JsonIgnore
 	private String password;
 	
-	@OneToMany(mappedBy="articoli")
+	@OneToMany(mappedBy="user")
+	@JsonIgnore
 	private Set<Articolo> articoli;
 
 	public Set<Articolo> getArticoli() {

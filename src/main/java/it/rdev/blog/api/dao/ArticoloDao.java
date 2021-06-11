@@ -17,7 +17,7 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	 * @param Long id_autore - ID dell'autore 
 	 * @return List<{@link Articolo} - Lista di articoli scritti dall'autore
 	 */
-	List<Articolo> findByAutore(Long id_autore);
+	List<Articolo> findByUser(Long id_user);
 	
 	
 }

@@ -13,7 +13,7 @@ public class Tag {
 	@Column(name="nome")
 	private String nome;
 	
-	@ManyToMany(mappedBy = "articoli")
+	@ManyToMany(mappedBy = "tags")
 	private Set<Articolo> articoli;
 
 	public String getNome() {
