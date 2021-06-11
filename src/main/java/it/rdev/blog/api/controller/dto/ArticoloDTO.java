@@ -8,10 +8,14 @@ public class ArticoloDTO {
 	private String titolo;
 	private String sottotitolo;
 	private String testo;
+	private UserDTO user;
+	private CategoriaDTO categoria;
 	private boolean bozza;
 	private Date data_creazione;
 	private Date data_pubblicazione;
 	private Date data_modifica;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -19,6 +23,7 @@ public class ArticoloDTO {
 		this.id = id;
 		return this;
 	}
+	
 	public String getTitolo() {
 		return titolo;
 	}
@@ -26,6 +31,7 @@ public class ArticoloDTO {
 		this.titolo = titolo;
 		return this;
 	}
+	
 	public String getSottotitolo() {
 		return sottotitolo;
 	}
@@ -33,6 +39,7 @@ public class ArticoloDTO {
 		this.sottotitolo = sottotitolo;
 		return this;
 	}
+	
 	public String getTesto() {
 		return testo;
 	}
@@ -40,6 +47,7 @@ public class ArticoloDTO {
 		this.testo = testo;
 		return this;
 	}
+	
 	public boolean isBozza() {
 		return bozza;
 	}
@@ -47,6 +55,7 @@ public class ArticoloDTO {
 		this.bozza = bozza;
 		return this;
 	}
+	
 	public Date getData_creazione() {
 		return data_creazione;
 	}
@@ -54,6 +63,7 @@ public class ArticoloDTO {
 		this.data_creazione = data_creazione;
 		return this;
 	}
+	
 	public Date getData_pubblicazione() {
 		return data_pubblicazione;
 	}
@@ -61,11 +71,28 @@ public class ArticoloDTO {
 		this.data_pubblicazione = data_pubblicazione;
 		return this;
 	}
+	
 	public Date getData_modifica() {
 		return data_modifica;
 	}
 	public ArticoloDTO setData_modifica(Date data_modifica) {
 		this.data_modifica = data_modifica;
+		return this;
+	}
+	
+	public UserDTO getUser() {
+		return user;
+	}
+	public ArticoloDTO setUser(UserDTO user) {
+		this.user = user;
+		return this;
+	}
+	
+	public CategoriaDTO getCategoria() {
+		return categoria;
+	}
+	public ArticoloDTO setCategoria(CategoriaDTO categoria) {
+		this.categoria = categoria;
 		return this;
 	}
 	

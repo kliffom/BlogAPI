@@ -2,6 +2,7 @@ package it.rdev.blog.api.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +20,7 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	 */
 	List<Articolo> findByUser(Long id_user);
 	
+	@Query("SELECT a FROM Articolo a WHERE a.bozza = FALSE")
+	List<Articolo> findAllPubblicati();
 	
 }

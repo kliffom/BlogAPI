@@ -9,15 +9,17 @@ public class UserDTO {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public UserDTO setUsername(String username) {
 		this.username = username;
+		return this;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public UserDTO setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 }
