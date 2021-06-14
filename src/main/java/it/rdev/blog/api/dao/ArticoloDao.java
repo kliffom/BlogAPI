@@ -22,6 +22,37 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	List<Articolo> findByUser(Long id_user);
 	
 	/**
+	 * Restituisce una lista di articoli dell'autore passato
+	 * @param autore - Autore da ricercare
+	 * @return List<{@link Autore}> - Lista di articoli di un autore
+	 */
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.user u "
+			+ "WHERE u.username = :autore")
+	List<Articolo> findByAutore(String autore);
+	
+	/**
+	 * Restituisce una lista di articoli della categoria passata
+	 * @param category - Categoria da ricercare
+	 * @return  List<{@link Articolo}> - Lista di articoli di una categoria
+	 */
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.categoria cat "
+			+ "WHERE cat.descrizione = :category")
+	List<Articolo> findByCategory(String category);
+	
+	
+	/**
+	 * Restituisce una lista di articoli del tag passato
+	 * @param tag - tag da ricercare
+	 * @return  List<{@link Articolo}> - Lista di articoli di un tag
+	 */
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.tags tag "
+			+ "WHERE tag.nome = :tag")
+	List<Articolo> findByTag(String tag);
+	
+	/**
 	 * Restituisce una lista di articoli che sono stati pubblicati (flag bozza=false)
 	 * @return List<{@link Articolo} - Lista di articoli pubblicati
 	 */
@@ -43,6 +74,8 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 			+ "a1.bozza = TRUE"
 			+ ")")
 	List<Articolo> findAllByUser(@Param("username") String username);
+	
+	
 	
 	/**
 	 * Restituisce una lista di articoli. 

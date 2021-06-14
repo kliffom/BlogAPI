@@ -72,6 +72,29 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 	
 	@Override
+	public List<ArticoloDTO> getAllArticoliByCategory(String category) {
+		
+		logger.info("getAllArticoliByCategory(" + category + ") called. Retrieving informations.");
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByCategory(category);
+		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
+
+	@Override
+	public List<ArticoloDTO> getAllArticoliByTag(String tag) {
+		
+		logger.info("getAllArticoliByTag(" + tag + ") called. Retrieving informations.");
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByTag(tag);
+		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
+
+	
+	@Override
 	public List<ArticoloDTO> getAllArticoliByContenuto(String searchValue) {
 		
 		logger.info("getAllArticoliByContenuto(" + searchValue + ") called. Retrieving informations.");
@@ -162,4 +185,5 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return artDto;
 	}
 
+	
 }

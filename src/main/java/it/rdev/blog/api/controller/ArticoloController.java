@@ -1,5 +1,6 @@
 package it.rdev.blog.api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,26 +34,69 @@ public class ArticoloController {
 	
 	@RequestMapping(value="/articolo", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token, 
-			@Param("id") Long id, @Param("cat") String category, @Param("tag") String tag, @Param("aut") String autore,
+			@Param("id") Long id, @Param("cat") String cat, @Param("tag") String tag, @Param("aut") String aut,
 			@Param("search") String search) {
 		
 		String username = getUsernameFromToken(token);
 		List<ArticoloDTO> allArtic = null;
 		
+		logger.info("Parametri ricevuti: [search=" + search + ", id=" + id + ", cat=" + cat + 
+				", tag=" + tag + ", aut=" + aut + "]");
+		
 		if(search!=null) {
-			if(id!=null || category!=null || tag!=null || autore!=null) { // Sono stati inseriti entrambi i criteri di ricerca, devono essercene solo 1 per volta
+			if(id!=null || cat!=null || tag!=null || aut!=null) { // Sono stati inseriti entrambi i criteri di ricerca, devono essercene solo 1 per volta
+				logger.error("Passati entrambi i criteri di ricerca. Solo uno ammesso.");
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri di ricerca non corretti.");
 			}
 			else if(search.length()<2) {	// La ricerca per contenuto contiene pochi caratteri
+				logger.error("Passati meno di 3 caratteri per la ricerca.");
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La ricerca deve contenere almeno 3 caratteri.");
 			}
 			else {
+				logger.info("Ricerco articoli contenenti " + search + ".");
 				allArtic = articoloServiceImpl.getAllArticoliByContenuto(search);
 			}
 		}
 		
-		else if(id!=null || category!=null || tag!=null || autore!=null) { // Sono stati inseriti alcuni parametri di ricerca
-			// Invoca qui la ricerca su questi parametri
+		else if(id!=null || cat!=null || tag!=null || aut!=null) { // Sono stati inseriti alcuni parametri di ricerca
+			List<ArticoloDTO> allArticId = new ArrayList<>(); 
+			List<ArticoloDTO> allArticCat = new ArrayList<>(); 
+			List<ArticoloDTO> allArticTag = new ArrayList<>(); 
+			List<ArticoloDTO> allArticAut = new ArrayList<>();
+			
+			if(id!=null) { // Eseguo ricerca per id
+				logger.info("Ricerco articoli con id " + id + ".");
+				ArticoloDTO artById = articoloServiceImpl.getArticoloById(id);
+				allArticId.add(artById);
+				allArtic = allArticId; // assegno su allArtic per poter fare la ricerca comune successivamente
+			}
+			if(cat!=null) { // Eseguo ricerca per categoria
+				logger.info("Ricerco articoli con categoria " + cat + ".");
+				allArticCat = articoloServiceImpl.getAllArticoliByCategory(cat);
+				allArtic = allArticCat; // assegno anche i successivi su allArtic, nel caso i filtri precedenti fossero null, così da fare il confrondo solo sulle List popolate
+			}
+			if(tag!=null) { // Eseguo ricerca per tag
+				logger.info("Ricerco articoli con tag " + tag + ".");
+				allArticTag = articoloServiceImpl.getAllArticoliByTag(tag);
+				allArtic = allArticTag;
+			}
+			if(aut!=null) { // Eseguo ricerca per autore
+				logger.info("Ricerco articoli con autore " + aut + ".");
+				allArticAut = articoloServiceImpl.getAllArticoliByUser(aut);
+				allArtic = allArticAut;
+			}
+			
+			// cerco gli elementi comuni tra tutti per restituirli
+			// retainAll invoca il metodo equals() sugli oggetti contenuti
+			// ridefinito equals() in ArticoloDTO in modo che venga controllato solo l'ID di persistenza e non l'ID dell'oggetto
+			if(!allArticId.isEmpty())
+				allArtic.retainAll(allArticId);
+			if(!allArticCat.isEmpty())
+				allArtic.retainAll(allArticCat);
+			if(!allArticTag.isEmpty())
+				allArtic.retainAll(allArticTag);
+			if(!allArticAut.isEmpty())
+				allArtic.retainAll(allArticAut);
 		}
 
 		else {		// Se non ci sono parametri di ricerca, eseguirà le query di prelievo di tutti gli articoli
@@ -63,7 +107,7 @@ public class ArticoloController {
 				allArtic = articoloServiceImpl.getAllArticoliPubblicati();
 			}
 		}
-		if(allArtic==null)
+		if(allArtic==null || allArtic.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun articolo trovato.");
 		else
 			return ResponseEntity.ok(allArtic);
