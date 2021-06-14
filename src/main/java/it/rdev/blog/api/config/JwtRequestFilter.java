@@ -38,56 +38,57 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 
-		final String requestTokenHeader = request.getHeader(jwtHeader);
+			final String requestTokenHeader = request.getHeader(jwtHeader);
 
-		String username = null;
-		String jwtToken = null;
-		/*
-		 * Il token utilizzato è in formato "Bearer Token". Se si vuole evitare 
-		 * di inserire Bearer nell'header si può rimuovere il valore dal file di configurazione
-		 */
-		if (requestTokenHeader != null) {
-			if(requestTokenHeader.startsWith(jwtTokenType)) {
-				jwtToken = requestTokenHeader.substring(7);
-				try {
-					username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-				} catch (IllegalArgumentException e) {
-					logger.error("Impossibile recuperare il token JWT", e);
-				} catch (ExpiredJwtException e) {
-					logger.error("Token scaduto!", e);
-				} 	
-			}
-			else {
-				logger.warn("Il token recuperato dall'header Authorization non inizia con la parola chiave Bearer!");
-			}
-		} else {
-			logger.debug("Utente anonimo.");
-		}
+			String username = null;
+			String jwtToken = null;
+			/*
+			* Il token utilizzato è in formato "Bearer Token". Se si vuole evitare
+			* di inserire Bearer nell'header si può rimuovere il valore dal file di configurazione
+			*/
+			if (requestTokenHeader != null) {
+			if (requestTokenHeader.startsWith(jwtTokenType)) {
 
-		// Una volta ottenuto il token deve essere validato
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			jwtToken = requestTokenHeader.substring(7);
+			try {
+			username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			} catch (IllegalArgumentException e) {
+			logger.error("Impossibile recuperare il token JWT", e);
+			} catch (ExpiredJwtException e) {
+			logger.error("Token scaduto!", e);
+			}
+			} else {
+			logger.warn("Il token recuperato dall'header Authorization non inizia con la parola chiave Bearer!");
+			}
+			} else {
+			logger.debug("Utente anonimo!");
+			}
+
+
+			// Una volta ottenuto il token deve essere validato
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
 			// if token is valid configure Spring Security to manually set
 			// authentication
 			/*
-			 * Se il token è valido imposto l'autenticazione in Spring Security
-			 */
+			* Se il token è valido imposto l'autenticazione in Spring Security
+			*/
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				usernamePasswordAuthenticationToken
-						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				/*
-				 * Dopo aver impostato l'autenticazione nel contesto specifichiamo
-				 * che l'utente corrente risulta autenticato 
-				 */
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+			userDetails, null, userDetails.getAuthorities());
+			usernamePasswordAuthenticationToken
+			.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			/*
+			* Dopo aver impostato l'autenticazione nel contesto specifichiamo
+			* che l'utente corrente risulta autenticato
+			*/
+			SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			}
-		}
-		chain.doFilter(request, response);
-	}
+			}
+			chain.doFilter(request, response);
+			}
 
 }
