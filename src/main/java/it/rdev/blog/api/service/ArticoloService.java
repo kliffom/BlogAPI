@@ -12,5 +12,7 @@ public interface ArticoloService {
 	
 	List<ArticoloDTO> getAllArticoliByUser(String username);
 	
+	List<ArticoloDTO> getAllArticoliByContenuto(String searchValue);
+	
 	ArticoloDTO getArticoloById(long id);
 }

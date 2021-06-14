@@ -2,7 +2,10 @@ package it.rdev.blog.api.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,22 +29,42 @@ public class ArticoloController {
 	@Autowired
 	private JwtTokenUtil jwtUtil;
 	
+	Logger logger = LoggerFactory.getLogger(ArticoloController.class);
+	
 	@RequestMapping(value="/articolo", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token) {
+	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token, 
+			@Param("id") Long id, @Param("cat") String category, @Param("tag") String tag, @Param("aut") String autore,
+			@Param("search") String search) {
 		
 		String username = getUsernameFromToken(token);
-		
 		List<ArticoloDTO> allArtic = null;
 		
-		if(username!=null) {
-			allArtic = articoloServiceImpl.getAllArticoliByUser(username);
-		}
-		else { //utente anonimo, prendo solo gli articoli pubblicati
-			allArtic = articoloServiceImpl.getAllArticoliPubblicati();
+		if(search!=null) {
+			if(id!=null || category!=null || tag!=null || autore!=null) { // Sono stati inseriti entrambi i criteri di ricerca, devono essercene solo 1 per volta
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri di ricerca non corretti.");
+			}
+			else if(search.length()<2) {	// La ricerca per contenuto contiene pochi caratteri
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La ricerca deve contenere almeno 3 caratteri.");
+			}
+			else {
+				allArtic = articoloServiceImpl.getAllArticoliByContenuto(search);
+			}
 		}
 		
+		else if(id!=null || category!=null || tag!=null || autore!=null) { // Sono stati inseriti alcuni parametri di ricerca
+			// Invoca qui la ricerca su questi parametri
+		}
+
+		else {		// Se non ci sono parametri di ricerca, eseguirà le query di prelievo di tutti gli articoli
+			if(username!=null) {
+				allArtic = articoloServiceImpl.getAllArticoliByUser(username);
+			}
+			else { //utente anonimo, prendo solo gli articoli pubblicati
+				allArtic = articoloServiceImpl.getAllArticoliPubblicati();
+			}
+		}
 		if(allArtic==null)
-			return (ResponseEntity<?>) ResponseEntity.notFound();
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun articolo trovato.");
 		else
 			return ResponseEntity.ok(allArtic);
 	}

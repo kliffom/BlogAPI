@@ -45,31 +45,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 		logger.info("getAllArticoli() called. Retrieving informations.");
 		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAll();
 		
-		List<ArticoloDTO> allArticoliDto = new ArrayList<>();
-		for(Articolo art: allArticoli) {
-			
-			User userEn = userDao.findByUsername(art.getUser().getUsername());
-			UserDTO user = new UserDTO().setUsername(userEn.getUsername());
-			
-			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
-			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
-			
-			
-			
-			ArticoloDTO artDto = new ArticoloDTO()
-					.setId(art.getId())
-					.setTitolo(art.getTitolo())
-					.setSottotitolo(art.getSottotitolo())
-					.setTesto(art.getTesto())
-					.setBozza(art.isBozza())
-					.setData_creazione(art.getData_creazione())
-					.setData_pubblicazione(art.getData_pubblicazione())
-					.setData_modifica(art.getData_modifica())
-					.setUser(user) 
-					.setCategoria(categoria);
-			allArticoliDto.add(artDto);
-		}
-		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
 		return allArticoliDto;
 	}
 
@@ -79,37 +55,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 		logger.info("getAllArticoliPubblicati() called. Retrieving informations.");
 		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllPubblicati();
 		
-		List<ArticoloDTO> allArticoliDto = new ArrayList<>();
-		for(Articolo art: allArticoli) {
-			
-			User userEn = userDao.findByUsername(art.getUser().getUsername());
-			UserDTO user = new UserDTO().setUsername(userEn.getUsername());
-			
-			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
-			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
-			
-			Set<Tag> tagsEn = art.getTags();
-			List<TagDTO> tagsDTO = new ArrayList<>();
-			
-			for(Tag tag: tagsEn) {
-				tagsDTO.add(new TagDTO().setNome(tag.getNome()));
-			}
-			
-			
-			ArticoloDTO artDto = new ArticoloDTO()
-					.setId(art.getId())
-					.setTitolo(art.getTitolo())
-					.setSottotitolo(art.getSottotitolo())
-					.setTesto(art.getTesto())
-					.setBozza(art.isBozza())
-					.setData_creazione(art.getData_creazione())
-					.setData_pubblicazione(art.getData_pubblicazione())
-					.setData_modifica(art.getData_modifica())
-					.setUser(user) 
-					.setCategoria(categoria)
-					.setTags(tagsDTO);
-			allArticoliDto.add(artDto);
-		}
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
 		
 		return allArticoliDto;
 	}
@@ -120,6 +66,37 @@ public class ArticoloServiceImpl implements ArticoloService{
 		logger.info("getAllArticoliByUser(" + username + ") called. Retrieving informations.");
 		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByUser(username);
 		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
+	
+	@Override
+	public List<ArticoloDTO> getAllArticoliByContenuto(String searchValue) {
+		
+		logger.info("getAllArticoliByContenuto(" + searchValue + ") called. Retrieving informations.");
+		
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByContenuto(searchValue);
+		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
+
+	@Override
+	public ArticoloDTO getArticoloById(long id) {
+	
+		logger.info("getArticoloById(" + id + ") called. Retrieving informations.");
+		Optional<Articolo> artResult = articoloDao.findById(id);
+		Articolo art = artResult.get();
+		
+		ArticoloDTO artDto = convertArticoloToDTO(art);
+		
+		return artDto;
+	}
+
+	private List<ArticoloDTO> convertListArticoloToDTO(List<Articolo> allArticoli) {
+		
 		List<ArticoloDTO> allArticoliDto = new ArrayList<>();
 		for(Articolo art: allArticoli) {
 			
@@ -153,13 +130,8 @@ public class ArticoloServiceImpl implements ArticoloService{
 		
 		return allArticoliDto;
 	}
-
-	@Override
-	public ArticoloDTO getArticoloById(long id) {
 	
-		logger.info("getArticoloById(" + id + ") called. Retrieving informations.");
-		Optional<Articolo> artResult = articoloDao.findById(id);
-		Articolo art = artResult.get();
+	private ArticoloDTO convertArticoloToDTO(Articolo art) {
 		
 		User userEn = userDao.findByUsername(art.getUser().getUsername());
 		UserDTO user = new UserDTO().setUsername(userEn.getUsername());
