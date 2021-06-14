@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import it.rdev.blog.api.config.JwtTokenUtil;
 import it.rdev.blog.api.controller.dto.ArticoloDTO;
+import it.rdev.blog.api.dao.entity.Articolo;
 import it.rdev.blog.api.service.impl.ArticoloServiceImpl;
 
 @RestController
@@ -136,11 +137,23 @@ public class ArticoloController {
 		Long id = getUserIdFromToken(token);
 		String username = getUsernameFromToken(token);
 		
+		if(username==null) { //utente non loggato
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
+		
 		logger.info("Invocazione aggiunta bozza articolo:");
 		logger.info(articolo.toString());
 		logger.info("ID Utente: " + id);
 		
-		articoloServiceImpl.save(articolo, username);
+		if(articolo.getTitolo()==null ||
+				articolo.getTesto()==null ||
+				articolo.getData_creazione()==null) { // Parametri in input non corretti
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		if(articoloServiceImpl.save(articolo, username) instanceof Articolo) {
+			return (ResponseEntity<?>) ResponseEntity.noContent();
+		}
 		
 		return null;
 	}
