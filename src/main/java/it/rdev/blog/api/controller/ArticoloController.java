@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +33,15 @@ public class ArticoloController {
 	
 	Logger logger = LoggerFactory.getLogger(ArticoloController.class);
 	
+	/**
+	 * Metodo invocato tramite l'url /api/articolo in modalità GET. In base ad i parametri restituisce un certo valore
+	 * @param token - Token di autenticazione dell'utente
+	 * @param id 	- ID dell'articolo da ricercare
+	 * @param cat	- Categoria dell'articolo da ricercare
+	 * @param tag	- Tag dell'articolo da ricercare
+	 * @param aut	- Autore dell'articolo da ricercare
+	 * @param search- Parametro di ricerca in titolo, sottotitolo o testo
+	 */
 	@RequestMapping(value="/articolo", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token, 
 			@Param("id") Long id, @Param("cat") String cat, @Param("tag") String tag, @Param("aut") String aut,
@@ -113,7 +123,26 @@ public class ArticoloController {
 			return ResponseEntity.ok(allArtic);
 	}
 	
+	/**
+	 * Metodo invocato tramite l'url /api/articolo in modalità POST. Consente l'aggiunta  di un articolo in bozza ad un utente loggato.
+	 * @param token 	- Token di autenticazione dell'utente
+	 * @param articolo	- Articolo in formato JSON da aggiungere
+	 */
+	@RequestMapping(value="/articolo", method = RequestMethod.POST)
+	public ResponseEntity<?> addArticolo( @RequestHeader(name = "Authorization", required = true) String token, 
+			@RequestBody ArticoloDTO articolo) {
+		
+		String username = getUsernameFromToken(token);
+		
+		
+		return null;
+	}
 
+	/**
+	 * Metodo invocato tramite l'url /api/articolo/<:id> in modalità GET. Restituisce un articolo in base all'id passato
+	 * @param id	- ID dell'articolo da ricercare
+	 * @param token - Token di autenticazione dell'utente
+	 */
 	@RequestMapping(value="/articolo/{id:\\d+}", method = RequestMethod.GET)
 	public ResponseEntity<?> getArticoloById(@PathVariable final Long id, @RequestHeader(name = "Authorization", required = false) String token) {
 		
