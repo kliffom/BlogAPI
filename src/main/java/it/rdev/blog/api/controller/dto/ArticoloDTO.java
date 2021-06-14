@@ -1,5 +1,6 @@
 package it.rdev.blog.api.controller.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +19,9 @@ public class ArticoloDTO {
 	private CategoriaDTO categoria;
 	private List<TagDTO> tags;
 	private boolean bozza;
-	private Date data_creazione;
-	private Date data_pubblicazione;
-	private Date data_modifica;
+	private LocalDateTime data_creazione;
+	private LocalDateTime data_pubblicazione;
+	private LocalDateTime data_modifica;
 	
 	
 	public long getId() {
@@ -63,26 +64,26 @@ public class ArticoloDTO {
 		return this;
 	}
 	
-	public Date getData_creazione() {
+	public LocalDateTime getData_creazione() {
 		return data_creazione;
 	}
-	public ArticoloDTO setData_creazione(Date data_creazione) {
+	public ArticoloDTO setData_creazione(LocalDateTime data_creazione) {
 		this.data_creazione = data_creazione;
 		return this;
 	}
 	
-	public Date getData_pubblicazione() {
+	public LocalDateTime getData_pubblicazione() {
 		return data_pubblicazione;
 	}
-	public ArticoloDTO setData_pubblicazione(Date data_pubblicazione) {
+	public ArticoloDTO setData_pubblicazione(LocalDateTime data_pubblicazione) {
 		this.data_pubblicazione = data_pubblicazione;
 		return this;
 	}
 	
-	public Date getData_modifica() {
+	public LocalDateTime getData_modifica() {
 		return data_modifica;
 	}
-	public ArticoloDTO setData_modifica(Date data_modifica) {
+	public ArticoloDTO setData_modifica(LocalDateTime data_modifica) {
 		this.data_modifica = data_modifica;
 		return this;
 	}
@@ -134,6 +135,13 @@ public class ArticoloDTO {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "ArticoloDTO [id=" + id + ", titolo=" + titolo + ", sottotitolo=" + sottotitolo + ", testo=" + testo
+				+ ", user=" + user + ", categoria=" + categoria + ", tags=" + tags + ", bozza=" + bozza
+				+ ", data_creazione=" + data_creazione + ", data_pubblicazione=" + data_pubblicazione
+				+ ", data_modifica=" + data_modifica + "]";
 	}
 	
 	

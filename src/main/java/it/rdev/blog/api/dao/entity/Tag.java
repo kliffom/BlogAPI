@@ -23,16 +23,23 @@ public class Tag {
 		return nome;
 	}
 
-	public void setNome(String nome) {
+	public Tag setNome(String nome) {
 		this.nome = nome;
+		return this;
 	}
 
 	public Set<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articolo> articoli) {
+	public Tag setArticoli(Set<Articolo> articoli) {
 		this.articoli = articoli;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "Tag [nome=" + nome + "]";
 	}
 	
 	

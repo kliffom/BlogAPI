@@ -1,6 +1,7 @@
 package it.rdev.blog.api.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -130,10 +131,16 @@ public class ArticoloController {
 	 */
 	@RequestMapping(value="/articolo", method = RequestMethod.POST)
 	public ResponseEntity<?> addArticolo( @RequestHeader(name = "Authorization", required = true) String token, 
-			@RequestBody ArticoloDTO articolo) {
+			@RequestBody ArticoloDTO articolo) throws Exception {
 		
+		Long id = getUserIdFromToken(token);
 		String username = getUsernameFromToken(token);
 		
+		logger.info("Invocazione aggiunta bozza articolo:");
+		logger.info(articolo.toString());
+		logger.info("ID Utente: " + id);
+		
+		articoloServiceImpl.save(articolo, username);
 		
 		return null;
 	}
@@ -185,5 +192,17 @@ public class ArticoloController {
 		}
 		
 		return username;
+	}
+	
+	private Long getUserIdFromToken(String token) {
+		
+		Long id=null;
+		
+		if(token!=null && token.startsWith("Bearer")) {
+			token = token.replaceAll("Bearer ", "");
+			id = jwtUtil.getUserIdFromToken(token);
+		}
+		
+		return id;
 	}
 }

@@ -1,5 +1,6 @@
 package it.rdev.blog.api.dao.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -16,22 +17,29 @@ public class Categoria {
 	
 	@OneToMany(mappedBy="categoria")
 	@JsonIgnore
-	private Set<Articolo> articoli;
+	private List<Articolo> articoli;
 
 	public String getDescrizione() {
 		return descrizione;
 	}
 
-	public void setDescrizione(String descrizione) {
+	public Categoria setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
+		return this;
 	}
 
-	public Set<Articolo> getArticoli() {
+	public List<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articolo> articoli) {
+	public Categoria setArticoli(List<Articolo> articoli) {
 		this.articoli = articoli;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "Categoria [descrizione=" + descrizione + "]";
 	}
 	
 	

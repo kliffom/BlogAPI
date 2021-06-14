@@ -2,6 +2,7 @@ package it.rdev.blog.api.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -21,13 +22,13 @@ public class User {
 	
 	@OneToMany(mappedBy="user")
 	@JsonIgnore
-	private Set<Articolo> articoli;
+	private List<Articolo> articoli;
 
-	public Set<Articolo> getArticoli() {
+	public List<Articolo> getArticoli() {
 		return articoli;
 	}
 
-	public void setArticoli(Set<Articolo> articoli) {
+	public void setArticoli(List<Articolo> articoli) {
 		this.articoli = articoli;
 	}
 
@@ -54,5 +55,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + "]";
+	}
+	
+	
 
 }

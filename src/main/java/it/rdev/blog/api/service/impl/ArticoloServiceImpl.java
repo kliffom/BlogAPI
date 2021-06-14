@@ -1,9 +1,13 @@
 package it.rdev.blog.api.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +121,38 @@ public class ArticoloServiceImpl implements ArticoloService{
 		
 		return artDto;
 	}
+	
+	public Articolo save(ArticoloDTO articolo, String username) {
+		
+		logger.info("save(" + articolo.getTitolo() + ", " + username + ") called. Retrieving informations.");
+		
+		Articolo artic = new Articolo()
+				.setTitolo(articolo.getTitolo())
+				.setSottotitolo(articolo.getSottotitolo())
+				.setTesto(articolo.getTesto())
+				.setBozza(true)
+				.setData_creazione(LocalDateTime.now());
+		
+		User user = userDao.findByUsername(username);
+		Categoria cat = new Categoria().setDescrizione(articolo.getCategoria().getDescrizione());
+		List<TagDTO> tags = articolo.getTags();
+		List<Tag> tagsEn = new ArrayList<>();
+		for(TagDTO tag: tags) {
+			Tag tagEn = new Tag().setNome(tag.getNome());
+			tagsEn.add(tagEn);
+		}
+		
+		
+		artic.setUser(user);
+		artic.setCategoria(cat);
+		artic.setTags(tagsEn);
+		
+		logger.info(artic.toString());
+				
+		
+		//Invocare qui ArticoloDao.save(artic); // Per rendere persistente l'oggetto nel DB
+		return articoloDao.save(artic);
+	}
 
 	private List<ArticoloDTO> convertListArticoloToDTO(List<Articolo> allArticoli) {
 		
@@ -129,7 +165,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 			
-			Set<Tag> tagsEn = art.getTags();
+			List<Tag> tagsEn = art.getTags();
 			List<TagDTO> tagsDTO = new ArrayList<>();
 			
 			for(Tag tag: tagsEn) {
@@ -162,7 +198,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 		Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 		CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 		
-		Set<Tag> tagsEn = art.getTags();
+		List<Tag> tagsEn = art.getTags();
 		List<TagDTO> tagsDTO = new ArrayList<>();
 		
 		for(Tag tag: tagsEn) {
