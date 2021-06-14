@@ -1,6 +1,8 @@
 package it.rdev.blog.api.controller.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ArticoloDTO {
 
@@ -10,6 +12,7 @@ public class ArticoloDTO {
 	private String testo;
 	private UserDTO user;
 	private CategoriaDTO categoria;
+	private List<TagDTO> tags;
 	private boolean bozza;
 	private Date data_creazione;
 	private Date data_pubblicazione;
@@ -95,6 +98,20 @@ public class ArticoloDTO {
 		this.categoria = categoria;
 		return this;
 	}
+	public List<TagDTO> getTags() {
+		return tags;
+	}
+	public ArticoloDTO setTags(List<TagDTO> tags) {
+		this.tags = tags;
+		return this;
+	}
+	public ArticoloDTO addTag(TagDTO tag) {
+		if(this.tags == null)
+			this.tags = new ArrayList<>();
+		tags.add(tag);
+		return this;
+	}
+	
 	
 	
 }

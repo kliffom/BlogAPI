@@ -3,6 +3,7 @@ package it.rdev.blog.api.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import it.rdev.blog.api.controller.dto.ArticoloDTO;
 import it.rdev.blog.api.controller.dto.CategoriaDTO;
+import it.rdev.blog.api.controller.dto.TagDTO;
 import it.rdev.blog.api.controller.dto.UserDTO;
 import it.rdev.blog.api.dao.ArticoloDao;
 import it.rdev.blog.api.dao.CategoriaDao;
+import it.rdev.blog.api.dao.TagDao;
 import it.rdev.blog.api.dao.UserDao;
 import it.rdev.blog.api.dao.entity.Articolo;
 import it.rdev.blog.api.dao.entity.Categoria;
+import it.rdev.blog.api.dao.entity.Tag;
 import it.rdev.blog.api.dao.entity.User;
 import it.rdev.blog.api.service.ArticoloService;
 
@@ -50,6 +54,8 @@ public class ArticoloServiceImpl implements ArticoloService{
 			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 			
+			
+			
 			ArticoloDTO artDto = new ArticoloDTO()
 					.setId(art.getId())
 					.setTitolo(art.getTitolo())
@@ -82,6 +88,14 @@ public class ArticoloServiceImpl implements ArticoloService{
 			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 			
+			Set<Tag> tagsEn = art.getTags();
+			List<TagDTO> tagsDTO = new ArrayList<>();
+			
+			for(Tag tag: tagsEn) {
+				tagsDTO.add(new TagDTO().setNome(tag.getNome()));
+			}
+			
+			
 			ArticoloDTO artDto = new ArticoloDTO()
 					.setId(art.getId())
 					.setTitolo(art.getTitolo())
@@ -92,7 +106,8 @@ public class ArticoloServiceImpl implements ArticoloService{
 					.setData_pubblicazione(art.getData_pubblicazione())
 					.setData_modifica(art.getData_modifica())
 					.setUser(user) 
-					.setCategoria(categoria);
+					.setCategoria(categoria)
+					.setTags(tagsDTO);
 			allArticoliDto.add(artDto);
 		}
 		
@@ -114,6 +129,13 @@ public class ArticoloServiceImpl implements ArticoloService{
 			Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 			CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 			
+			Set<Tag> tagsEn = art.getTags();
+			List<TagDTO> tagsDTO = new ArrayList<>();
+			
+			for(Tag tag: tagsEn) {
+				tagsDTO.add(new TagDTO().setNome(tag.getNome()));
+			}
+			
 			ArticoloDTO artDto = new ArticoloDTO()
 					.setId(art.getId())
 					.setTitolo(art.getTitolo())
@@ -124,7 +146,8 @@ public class ArticoloServiceImpl implements ArticoloService{
 					.setData_pubblicazione(art.getData_pubblicazione())
 					.setData_modifica(art.getData_modifica())
 					.setUser(user) 
-					.setCategoria(categoria);
+					.setCategoria(categoria)
+					.setTags(tagsDTO);
 			allArticoliDto.add(artDto);
 		}
 		
@@ -144,6 +167,13 @@ public class ArticoloServiceImpl implements ArticoloService{
 		Categoria catEn = categoriaDao.findByDescrizione(art.getCategoria().getDescrizione());
 		CategoriaDTO categoria = new CategoriaDTO().setDescrizione(catEn.getDescrizione());
 		
+		Set<Tag> tagsEn = art.getTags();
+		List<TagDTO> tagsDTO = new ArrayList<>();
+		
+		for(Tag tag: tagsEn) {
+			tagsDTO.add(new TagDTO().setNome(tag.getNome()));
+		}
+		
 		ArticoloDTO artDto = new ArticoloDTO()
 				.setId(art.getId())
 				.setTitolo(art.getTitolo())
@@ -154,7 +184,8 @@ public class ArticoloServiceImpl implements ArticoloService{
 				.setData_pubblicazione(art.getData_pubblicazione())
 				.setData_modifica(art.getData_modifica())
 				.setUser(user)
-				.setCategoria(categoria);
+				.setCategoria(categoria)
+				.setTags(tagsDTO);
 		
 		return artDto;
 	}

@@ -21,9 +21,20 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	 */
 	List<Articolo> findByUser(Long id_user);
 	
+	/**
+	 * Restituisce una lista di articoli che sono stati pubblicati (flag bozza=false)
+	 * @return List<{@link Articolo} - Lista di articoli pubblicati
+	 */
 	@Query("SELECT a FROM Articolo a WHERE a.bozza = FALSE")
 	List<Articolo> findAllPubblicati();
 	
+	/**
+	 * Restituisce una lista di articoli. Passando in input uno username, 
+	 * la query andrà a restituire tutti gli articoli pubblicati 
+	 * e quelli in stato di bozza da parte dell'utente 'username'.
+	 * @param username - username dell'autore degli articoli
+	 * @return List<{@link Articolo} - Lista di articoli pubblicati e in bozza di username
+	 */
 	@Query("SELECT a FROM Articolo a WHERE a.id NOT IN ("
 			+ "SELECT a1.id FROM Articolo a1 "
 			+ "JOIN a1.user u "

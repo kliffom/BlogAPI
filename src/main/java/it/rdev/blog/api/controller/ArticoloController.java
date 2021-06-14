@@ -29,11 +29,7 @@ public class ArticoloController {
 	@RequestMapping(value="/articolo", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token) {
 		
-		String username = null;
-		if(token!=null && token.startsWith("Bearer")) {
-			token = token.replaceAll("Bearer ", "");
-			username = jwtUtil.getUsernameFromToken(token);
-		}
+		String username = getUsernameFromToken(token);
 		
 		List<ArticoloDTO> allArtic = null;
 		
