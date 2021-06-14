@@ -64,7 +64,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 	public List<ArticoloDTO> getAllArticoliByUser(String username) {
 		
 		logger.info("getAllArticoliByUser(" + username + ") called. Retrieving informations.");
-		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByUser(username);
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByAutore(username);
 		
 		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
 		
