@@ -154,6 +154,40 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return articoloDao.save(artic);
 	}
 
+	public Articolo update(ArticoloDTO articolo, String username) {
+		logger.info("update(" + articolo.getTitolo() + ", " + username + ") called. Retrieving informations.");
+		
+		Articolo artic = new Articolo()
+				.setTitolo(articolo.getTitolo())
+				.setSottotitolo(articolo.getSottotitolo())
+				.setTesto(articolo.getTesto())
+				.setBozza(articolo.isBozza())
+				.setData_creazione(articolo.getData_creazione())
+				.setData_modifica(LocalDateTime.now());
+		
+		if(!articolo.isBozza())		// Se l'articolo non è più in stato di bozza
+			if(artic.getData_pubblicazione()==null)		// E non era ancora stato pubblicato
+				artic.setData_pubblicazione(LocalDateTime.now()); 	// Inserisco la data di pubblicazione
+		
+		User user = userDao.findByUsername(username);
+		Categoria cat = new Categoria().setDescrizione(articolo.getCategoria().getDescrizione());
+		List<TagDTO> tags = articolo.getTags();
+		List<Tag> tagsEn = new ArrayList<>();
+		for(TagDTO tag: tags) {
+			Tag tagEn = new Tag().setNome(tag.getNome());
+			tagsEn.add(tagEn);
+		}
+		
+		
+		artic.setUser(user);
+		artic.setCategoria(cat);
+		artic.setTags(tagsEn);
+		
+		logger.info(artic.toString());
+				
+		return articoloDao.save(artic);
+	}
+	
 	private List<ArticoloDTO> convertListArticoloToDTO(List<Articolo> allArticoli) {
 		
 		List<ArticoloDTO> allArticoliDto = new ArrayList<>();

@@ -22,4 +22,6 @@ public interface ArticoloService {
 	ArticoloDTO getArticoloById(long id);
 	
 	Articolo save(ArticoloDTO articolo, String username);
+	
+	Articolo update(ArticoloDTO articolo, String username);
 }

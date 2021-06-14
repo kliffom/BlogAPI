@@ -3,6 +3,7 @@ package it.rdev.blog.api.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +139,7 @@ public class ArticoloController {
 		String username = getUsernameFromToken(token);
 		
 		if(username==null) { //utente non loggato
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato e non autorzzato.");
 		}
 		
 		logger.info("Invocazione aggiunta bozza articolo:");
@@ -148,14 +149,79 @@ public class ArticoloController {
 		if(articolo.getTitolo()==null ||
 				articolo.getTesto()==null ||
 				articolo.getData_creazione()==null) { // Parametri in input non corretti
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri non conformi.");
 		}
 		
 		if(articoloServiceImpl.save(articolo, username) instanceof Articolo) {
 			return (ResponseEntity<?>) ResponseEntity.noContent();
 		}
 		
-		return null;
+		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore durante l'aggiunta dell'articolo.");
+	}
+	
+	/**
+	 * Metodo invocato tramite l'url /api/articolo<:id> in modalità PUT.
+	 * Consente la modifica e l'aggiornamento di un articolo inserito precedentemente.
+	 * @param id 		- ID dell'articolo da modificare
+	 * @param token		- Token di autenticazione dell'utente
+	 * @param articolo	- Articolo in formato JSON contenente i campi da modificare
+	 */
+	@RequestMapping(value="/articolo/{id:\\d+}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateArticolo(@PathVariable final Long id, 
+			@RequestHeader(name = "Authorization", required = true) String token, 
+			@RequestBody ArticoloDTO articolo) throws Exception {
+		
+		String username = getUsernameFromToken(token);
+		if(username!=null) { // Utente loggato
+			
+			ArticoloDTO artDto = null;
+			try {
+				artDto = articoloServiceImpl.getArticoloById(id);
+			} catch(NoSuchElementException e) { // Se non trova l'elemento va in eccezione, la gestisco per lanciare l'errore 404  
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
+			}
+			
+			if(artDto == null) { // Articolo non trovato
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
+			}
+			
+			logger.info("Articolo prelevato: " + artDto.toString());
+			logger.info("Utente articolo prelevato: " + artDto.getUser().toString());
+			
+			// TODO riparare questo controllo, lancia eccezione NullPointer poiché getId() return null
+			//		L'utente prelevato in artDto ha il campo username corretto ma non ha l'id
+			if(artDto.getUser().getUsername() != getUsernameFromToken(token)) { // Utente loggato differente dall'autore
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
+			}
+			
+			// Controllo i parametri inseriti nel JSON per vedere se sono null o da aggiornare
+			
+			if(articolo.getTitolo()!=null)  // Nuovo titolo da aggiornare
+				artDto.setTitolo(articolo.getTitolo());
+			
+			if(articolo.getSottotitolo()!=null)
+				artDto.setSottotitolo(articolo.getSottotitolo());
+			
+			if(articolo.getTesto()!=null)
+				artDto.setTesto(articolo.getTesto());
+			
+			if(articolo.getCategoria()!=null)
+				artDto.setCategoria(articolo.getCategoria());
+			
+			if(articolo.getTags()!=null)
+				artDto.setTags(articolo.getTags());
+			
+			if((Boolean) articolo.isBozza()!=null)
+				artDto.setBozza(articolo.isBozza());
+			
+			// Nuovo articolo aggiornato, update su DB
+			if(articoloServiceImpl.update(articolo, username) instanceof Articolo) {
+				return (ResponseEntity<?>) ResponseEntity.noContent();
+			}
+			
+		}
+		
+		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); // Nessun utente loggato
 	}
 
 	/**
