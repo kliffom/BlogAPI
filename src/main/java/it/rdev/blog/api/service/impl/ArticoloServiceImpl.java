@@ -192,6 +192,15 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return articoloDao.save(artic);
 	}
 	
+	@Override
+	public void delete(Long idArticolo) {
+		
+		Optional<Articolo> artResult = articoloDao.findById(idArticolo);
+		Articolo artic = artResult.get();
+		
+		articoloDao.delete(artic);
+	}
+	
 	private List<ArticoloDTO> convertListArticoloToDTO(List<Articolo> allArticoli) {
 		
 		List<ArticoloDTO> allArticoliDto = new ArrayList<>();
@@ -259,5 +268,5 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return artDto;
 	}
 
-	
+		
 }

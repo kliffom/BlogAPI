@@ -24,4 +24,6 @@ public interface ArticoloService {
 	Articolo save(ArticoloDTO articolo, String username);
 	
 	Articolo update(ArticoloDTO articolo, String username);
+	
+	void delete(Long idArticolo);
 }

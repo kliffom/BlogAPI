@@ -189,8 +189,6 @@ public class ArticoloController {
 			logger.info("Articolo prelevato: " + artDto.toString());
 			logger.info("Utente articolo prelevato: " + artDto.getUser().toString());
 			
-			// TODO riparare questo controllo, lancia eccezione NullPointer poiché getId() return null
-			//		L'utente prelevato in artDto ha il campo username corretto ma non ha l'id
 			if(!artDto.getUser().getUsername().equals(getUsernameFromToken(token))) { // Utente loggato differente dall'autore
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
 			}
@@ -222,6 +220,42 @@ public class ArticoloController {
 			
 		}
 		else 
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); // Nessun utente loggato
+	}
+	
+	/**
+	 * Metodo invocato tramite l'url /api/articolo/<:id> in modalità DELETE.
+	 * Elimina un articolo in base all'id ricevuto.
+	 * @param id		- ID dell'articolo da eliminare
+	 * @param token		- Token di autenticazione dell'utente
+	 */
+	@RequestMapping(value="/articolo/{id:\\d+}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteArticolo(@PathVariable final Long id, 
+			@RequestHeader(name = "Authorization", required = true) String token) throws Exception {
+		
+		String username = getUsernameFromToken(token);
+		if(username!=null) { // Utente loggato
+			
+			// Controllo se l'articolo è presente nel sistema
+			ArticoloDTO artDto = null;
+			try {
+				artDto = articoloServiceImpl.getArticoloById(id);
+			} catch(NoSuchElementException e) { // Se non trova l'elemento va in eccezione, la gestisco per lanciare l'errore 404  
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
+			}
+			
+			if(!artDto.getUser().getUsername().equals(getUsernameFromToken(token))) { // Utente loggato differente dall'autore
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
+			}
+			
+			// A questo punto è possibile invocare il metodo di eliminazione dell'articolo
+			
+			articoloServiceImpl.delete(artDto.getId());
+			
+			
+		}
+		else
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); // Nessun utente loggato
 	}
 
