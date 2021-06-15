@@ -53,6 +53,17 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	List<Articolo> findByTag(String tag);
 	
 	/**
+	 * Restituisce una lista di articoli in bozza scritti da username
+	 * @param username - username dell'autore
+	 * @return List<{@link Articolo}> - Lista di articoli in bozza
+	 */
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.user u "
+			+ "WHERE a.bozza = TRUE "
+			+ "AND u.username=:username")
+	List<Articolo> findInBozza(String username);
+	
+	/**
 	 * Restituisce una lista di articoli che sono stati pubblicati (flag bozza=false)
 	 * @return List<{@link Articolo} - Lista di articoli pubblicati
 	 */

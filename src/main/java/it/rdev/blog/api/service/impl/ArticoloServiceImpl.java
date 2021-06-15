@@ -133,6 +133,20 @@ public class ArticoloServiceImpl implements ArticoloService{
 		
 		return allArticoliDto;
 	}
+	
+	/**
+	 * Restituisce una lista contenente tutti gli articoli che sono in bozza per l'utente loggato
+	 */
+	@Override
+	public List<ArticoloDTO> getAllArticoliInBozza(String username) {
+		logger.info("getAllArticoliInBozza(" + username + ") called. Retrieving informations.");
+		
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findInBozza(username);
+		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
 
 	/**
 	 * Restituisce un articolo in base all'id ricevuto

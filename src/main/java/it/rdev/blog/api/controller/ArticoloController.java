@@ -43,21 +43,22 @@ public class ArticoloController {
 	 * @param cat	- Categoria dell'articolo da ricercare
 	 * @param tag	- Tag dell'articolo da ricercare
 	 * @param aut	- Autore dell'articolo da ricercare
+	 * @param stato - Stato dell'articolo (BOZZA)
 	 * @param search- Parametro di ricerca in titolo, sottotitolo o testo
 	 */
 	@RequestMapping(value="/articolo", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllArticoli( @RequestHeader(name = "Authorization", required = false) String token, 
 			@Param("id") Long id, @Param("cat") String cat, @Param("tag") String tag, @Param("aut") String aut,
-			@Param("search") String search) {
+			@Param("stato") String stato, @Param("search") String search) {
 		
 		String username = getUsernameFromToken(token);
 		List<ArticoloDTO> allArtic = null;
 		
 		logger.info("Parametri ricevuti: [search=" + search + ", id=" + id + ", cat=" + cat + 
-				", tag=" + tag + ", aut=" + aut + "]");
+				", tag=" + tag + ", aut=" + aut + ", stato=" + stato + "]");
 		
 		if(search!=null) {
-			if(id!=null || cat!=null || tag!=null || aut!=null) { // Sono stati inseriti entrambi i criteri di ricerca, devono essercene solo 1 per volta
+			if(id!=null || cat!=null || tag!=null || aut!=null || stato!=null) { // Sono stati inseriti entrambi i criteri di ricerca, devono essercene solo 1 per volta
 				logger.error("Passati entrambi i criteri di ricerca. Solo uno ammesso.");
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri di ricerca non corretti.");
 			}
@@ -71,11 +72,12 @@ public class ArticoloController {
 			}
 		}
 		
-		else if(id!=null || cat!=null || tag!=null || aut!=null) { // Sono stati inseriti alcuni parametri di ricerca
+		else if(id!=null || cat!=null || tag!=null || aut!=null || stato!=null) { // Sono stati inseriti alcuni parametri di ricerca
 			List<ArticoloDTO> allArticId = new ArrayList<>(); 
 			List<ArticoloDTO> allArticCat = new ArrayList<>(); 
 			List<ArticoloDTO> allArticTag = new ArrayList<>(); 
 			List<ArticoloDTO> allArticAut = new ArrayList<>();
+			List<ArticoloDTO> allArticStato = new ArrayList<>();
 			
 			if(id!=null) { // Eseguo ricerca per id
 				logger.info("Ricerco articoli con id " + id + ".");
@@ -98,6 +100,17 @@ public class ArticoloController {
 				allArticAut = articoloServiceImpl.getAllArticoliByUser(aut);
 				allArtic = allArticAut;
 			}
+			if(stato!=null) { // Eseguo ricerca per stato
+				if(!stato.equals("BOZZA")) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stato selezionato non gestito.");
+				}
+				if(username==null) { // Nessun utente loggato, non si può fare la ricerca per stato
+					throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); 
+				}
+				logger.info("Ricerco articoli con stato " + stato + ".");
+				allArticStato = articoloServiceImpl.getAllArticoliInBozza(username);
+				allArtic = allArticStato;
+			}
 			
 			// cerco gli elementi comuni tra tutti per restituirli
 			// retainAll invoca il metodo equals() sugli oggetti contenuti
@@ -110,6 +123,8 @@ public class ArticoloController {
 				allArtic.retainAll(allArticTag);
 			if(!allArticAut.isEmpty())
 				allArtic.retainAll(allArticAut);
+			if(!allArticStato.isEmpty())
+				allArtic.retainAll(allArticStato);
 		}
 
 		else {		// Se non ci sono parametri di ricerca, eseguirà le query di prelievo di tutti gli articoli

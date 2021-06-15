@@ -18,6 +18,8 @@ public interface ArticoloService {
 	
 	List<ArticoloDTO> getAllArticoliByTag(String tag);
 	
+	List<ArticoloDTO> getAllArticoliInBozza(String username);
+	
 	List<ArticoloDTO> getAllArticoliByContenuto(String searchValue);
 	
 	ArticoloDTO getArticoloById(long id);
