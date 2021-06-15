@@ -43,6 +43,13 @@ public class ArticoloServiceImpl implements ArticoloService{
 	@Autowired
 	private CategoriaDao categoriaDao;
 	
+	/**
+	 * Restituisce una lista di tutti gli articoli presenti nel sistema.
+	 * Da utilizzare solo in fase di testing. 
+	 * Utilizzare {@link #getAllArticoliPubblicati()} per gli utenti non loggati e
+	 * {@link #getAllArticoliByUser(String)} per gli utenti loggati.
+	 */
+	@Deprecated
 	@Override
 	public List<ArticoloDTO> getAllArticoli() {
 		
@@ -53,6 +60,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return allArticoliDto;
 	}
 
+	/**
+	 * Restituisce una lista di tutti gli articoli pubblicati (no bozze)
+	 */
 	@Override
 	public List<ArticoloDTO> getAllArticoliPubblicati() {
 		
@@ -64,17 +74,25 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return allArticoliDto;
 	}
 
+	/**
+	 * Restituisce una lista contenente tutti gli articoli pubblicati, 
+	 * più quelli in stato di bozza scritti da 'username'
+	 */
 	@Override
 	public List<ArticoloDTO> getAllArticoliByUser(String username) {
 		
 		logger.info("getAllArticoliByUser(" + username + ") called. Retrieving informations.");
-		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByAutore(username);
+		//List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByAutore(username);
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByUser(username);
 		
 		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
 		
 		return allArticoliDto;
 	}
 	
+	/**
+	 * Restituisce una lista contenente tutti gli articoli che appartengono ad una determinata categoria
+	 */
 	@Override
 	public List<ArticoloDTO> getAllArticoliByCategory(String category) {
 		
@@ -86,6 +104,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return allArticoliDto;
 	}
 
+	/**
+	 * Restituisce una lista contenente tutti gli articoli che contengono un determinato tag
+	 */
 	@Override
 	public List<ArticoloDTO> getAllArticoliByTag(String tag) {
 		
@@ -97,7 +118,10 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return allArticoliDto;
 	}
 
-	
+	/**
+	 * Restituisce una lista contenente tutti gli articoli che contengono il valore di 'searchValue'
+	 * all'interno di titolo, sottotitolo o testo
+	 */
 	@Override
 	public List<ArticoloDTO> getAllArticoliByContenuto(String searchValue) {
 		
@@ -110,6 +134,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return allArticoliDto;
 	}
 
+	/**
+	 * Restituisce un articolo in base all'id ricevuto
+	 */
 	@Override
 	public ArticoloDTO getArticoloById(long id) {
 	
@@ -122,6 +149,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return artDto;
 	}
 	
+	/**
+	 * Rende persistente l'articolo ricevuto
+	 */
 	public Articolo save(ArticoloDTO articolo, String username) {
 		
 		logger.info("save(" + articolo.getTitolo() + ", " + username + ") called. Retrieving informations.");
@@ -154,6 +184,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return articoloDao.save(artic);
 	}
 
+	/**
+	 * Aggiorna l'articolo ricevuto
+	 */
 	public Articolo update(ArticoloDTO articolo, String username) {
 		logger.info("update(" + articolo.getTitolo() + ", " + username + ") called. Retrieving informations.");
 		
@@ -192,6 +225,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 		return articoloDao.save(artic);
 	}
 	
+	/**
+	 * Elimina l'articolo corrispondente all'id ricevuto
+	 */
 	@Override
 	public void delete(Long idArticolo) {
 		

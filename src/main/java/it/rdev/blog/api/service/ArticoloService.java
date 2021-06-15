@@ -7,6 +7,7 @@ import it.rdev.blog.api.dao.entity.Articolo;
 
 public interface ArticoloService {
 
+	@Deprecated
 	List<ArticoloDTO> getAllArticoli();
 	
 	List<ArticoloDTO> getAllArticoliPubblicati();

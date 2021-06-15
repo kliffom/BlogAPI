@@ -193,6 +193,11 @@ public class ArticoloController {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
 			}
 			
+			// Controllo se l'articolo è in stato di bozza, altrimenti ne impedisco la modifica
+			if(!artDto.isBozza()) {
+				throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Articolo pubblicato, non più modificabile.");
+			}
+			
 			// Controllo i parametri inseriti nel JSON per vedere se sono null o da aggiornare
 			
 			if(articolo.getTitolo()!=null)  // Nuovo titolo da aggiornare
@@ -296,6 +301,11 @@ public class ArticoloController {
 		}
 	}
 	
+	/**
+	 * Funzione di supporto, consente di ottenere lo username dell'utente dal token di autenticazione
+	 * @param token	- Token di autenticazione dell'utente
+	 * @return String contenente lo username
+	 */
 	private String getUsernameFromToken(String token) {
 		
 		String username = null;
@@ -308,6 +318,11 @@ public class ArticoloController {
 		return username;
 	}
 	
+	/**
+	 * Funzione di supporto, consente di ottenere l'id dell'utente dal token di autenticazione
+	 * @param token	- Token di autenticazione dell'utente
+	 * @return Long contenente l'ID
+	 */
 	private Long getUserIdFromToken(String token) {
 		
 		Long id=null;
