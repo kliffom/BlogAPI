@@ -1,7 +1,6 @@
 package it.rdev.blog.api.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -132,7 +132,8 @@ public class ArticoloController {
 	 * @param articolo	- Articolo in formato JSON da aggiungere
 	 */
 	@RequestMapping(value="/articolo", method = RequestMethod.POST)
-	public ResponseEntity<?> addArticolo( @RequestHeader(name = "Authorization", required = true) String token, 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void addArticolo( @RequestHeader(name = "Authorization", required = true) String token, 
 			@RequestBody ArticoloDTO articolo) throws Exception {
 		
 		Long id = getUserIdFromToken(token);
@@ -147,16 +148,15 @@ public class ArticoloController {
 		logger.info("ID Utente: " + id);
 		
 		if(articolo.getTitolo()==null ||
-				articolo.getTesto()==null ||
-				articolo.getData_creazione()==null) { // Parametri in input non corretti
+				articolo.getTesto()==null) { // Parametri in input non corretti
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri non conformi.");
 		}
 		
 		if(articoloServiceImpl.save(articolo, username) instanceof Articolo) {
-			return (ResponseEntity<?>) ResponseEntity.noContent();
+			logger.info("Aggiunta eseguita correttamente.");
 		}
-		
-		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore durante l'aggiunta dell'articolo.");
+		else 
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore durante l'aggiunta dell'articolo.");
 	}
 	
 	/**
@@ -167,7 +167,8 @@ public class ArticoloController {
 	 * @param articolo	- Articolo in formato JSON contenente i campi da modificare
 	 */
 	@RequestMapping(value="/articolo/{id:\\d+}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateArticolo(@PathVariable final Long id, 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updateArticolo(@PathVariable final Long id, 
 			@RequestHeader(name = "Authorization", required = true) String token, 
 			@RequestBody ArticoloDTO articolo) throws Exception {
 		
@@ -190,7 +191,7 @@ public class ArticoloController {
 			
 			// TODO riparare questo controllo, lancia eccezione NullPointer poiché getId() return null
 			//		L'utente prelevato in artDto ha il campo username corretto ma non ha l'id
-			if(artDto.getUser().getUsername() != getUsernameFromToken(token)) { // Utente loggato differente dall'autore
+			if(!artDto.getUser().getUsername().equals(getUsernameFromToken(token))) { // Utente loggato differente dall'autore
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
 			}
 			
@@ -215,13 +216,13 @@ public class ArticoloController {
 				artDto.setBozza(articolo.isBozza());
 			
 			// Nuovo articolo aggiornato, update su DB
-			if(articoloServiceImpl.update(articolo, username) instanceof Articolo) {
-				return (ResponseEntity<?>) ResponseEntity.noContent();
+			if(articoloServiceImpl.update(artDto, username) instanceof Articolo) {
+				logger.info("Aggiornamento eseguito correttamente.");
 			}
 			
 		}
-		
-		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); // Nessun utente loggato
+		else 
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utente non loggato."); // Nessun utente loggato
 	}
 
 	/**

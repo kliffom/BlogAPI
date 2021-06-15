@@ -157,13 +157,17 @@ public class ArticoloServiceImpl implements ArticoloService{
 	public Articolo update(ArticoloDTO articolo, String username) {
 		logger.info("update(" + articolo.getTitolo() + ", " + username + ") called. Retrieving informations.");
 		
-		Articolo artic = new Articolo()
-				.setTitolo(articolo.getTitolo())
-				.setSottotitolo(articolo.getSottotitolo())
-				.setTesto(articolo.getTesto())
-				.setBozza(articolo.isBozza())
-				.setData_creazione(articolo.getData_creazione())
-				.setData_modifica(LocalDateTime.now());
+		Optional<Articolo> artResult = articoloDao.findById(articolo.getId());
+		Articolo artic = artResult.get();
+				
+//		Articolo artic = new Articolo();
+		
+		artic.setTitolo(articolo.getTitolo())
+			.setSottotitolo(articolo.getSottotitolo())
+			.setTesto(articolo.getTesto())
+			.setBozza(articolo.isBozza())
+			.setData_creazione(articolo.getData_creazione())
+			.setData_modifica(LocalDateTime.now());
 		
 		if(!articolo.isBozza())		// Se l'articolo non è più in stato di bozza
 			if(artic.getData_pubblicazione()==null)		// E non era ancora stato pubblicato
