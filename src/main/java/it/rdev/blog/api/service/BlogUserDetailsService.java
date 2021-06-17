@@ -17,12 +17,15 @@ import it.rdev.blog.api.service.bean.BlogUserDetails;
 @Service
 public class BlogUserDetailsService implements UserDetailsService {
 	
-	@Autowired
 	private UserDao userDao;
 
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
+	public BlogUserDetailsService(@Autowired UserDao userDao) {
+		this.userDao = userDao;
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userDao.findByUsername(username);

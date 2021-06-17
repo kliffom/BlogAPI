@@ -16,4 +16,4 @@ jwt:
     type: Bearer
   header: Authorization
   secret: password01
-  expiration: 7200
+  expiration: 10000
