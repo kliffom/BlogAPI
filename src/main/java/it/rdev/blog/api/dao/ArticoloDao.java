@@ -77,13 +77,18 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	 * @param username - username dell'autore degli articoli
 	 * @return List<{@link Articolo}> - Lista di articoli pubblicati e in bozza di username
 	 */
-	@Query("SELECT a FROM Articolo a WHERE a.id NOT IN ("
-			+ "SELECT a1.id FROM Articolo a1 "
-			+ "JOIN a1.user u "
-			+ "WHERE "
-			+ "u.username!=:username AND "
-			+ "a1.bozza = TRUE"
-			+ ")")
+//	@Query("SELECT a FROM Articolo a WHERE a.id NOT IN ("
+//			+ "SELECT a1.id FROM Articolo a1 "
+//			+ "JOIN a1.user u "
+//			+ "WHERE "
+//			+ "u.username!=:username AND "
+//			+ "a1.bozza = TRUE"
+//			+ ")")
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.user u "
+			+ "WHERE a.bozza = FALSE "
+			+ "OR (a.bozza = TRUE AND u.username=:username) "
+			+ "ORDER BY a.id")
 	List<Articolo> findAllByUser(@Param("username") String username);
 	
 	
