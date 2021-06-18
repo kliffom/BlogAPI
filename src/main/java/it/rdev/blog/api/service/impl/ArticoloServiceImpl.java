@@ -34,14 +34,23 @@ public class ArticoloServiceImpl implements ArticoloService{
 	
 	Logger logger = LoggerFactory.getLogger(ArticoloServiceImpl.class);
 	
-	@Autowired
+	
 	private ArticoloDao articoloDao;
 	
-	@Autowired
+	
 	private UserDao userDao;
 	
-	@Autowired
+	
 	private CategoriaDao categoriaDao;
+	
+	public ArticoloServiceImpl(
+			@Autowired ArticoloDao articoloDao,
+			@Autowired UserDao userDao,
+			@Autowired CategoriaDao categoriaDao) {
+		this.articoloDao = articoloDao;
+		this.categoriaDao = categoriaDao;
+		this.userDao = userDao;
+	}
 	
 	/**
 	 * Restituisce una lista di tutti gli articoli presenti nel sistema.

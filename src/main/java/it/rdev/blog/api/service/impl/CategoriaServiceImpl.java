@@ -18,8 +18,11 @@ public class CategoriaServiceImpl implements CategoriaService{
 
 	Logger logger = LoggerFactory.getLogger(CategoriaServiceImpl.class);
 	
-	@Autowired
 	private CategoriaDao categoriaDao;
+	
+	public CategoriaServiceImpl(@Autowired CategoriaDao categoriaDao) {
+		this.categoriaDao = categoriaDao;
+	}
 	
 	@Override
 	public List<CategoriaDTO> getAllCategorie() {
@@ -38,8 +41,12 @@ public class CategoriaServiceImpl implements CategoriaService{
 
 	@Override
 	public CategoriaDTO getCategoriaByDescrizione(String descrizione) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getCategoriaByDescrizione(" + descrizione + ") called. Retrieving informations.");
+
+		Categoria cat = categoriaDao.findByDescrizione(descrizione);
+		CategoriaDTO catDto = new CategoriaDTO().setDescrizione(cat.getDescrizione());
+		
+		return catDto;
 	}
 
 }

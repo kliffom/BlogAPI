@@ -18,8 +18,11 @@ public class TagServiceImpl implements TagService{
 
 	Logger logger = LoggerFactory.getLogger(TagServiceImpl.class);
 	
-	@Autowired
 	private TagDao tagDao;
+	
+	public TagServiceImpl(@Autowired TagDao tagDao) {
+		this.tagDao = tagDao;
+	}
 	
 	@Override
 	public List<TagDTO> getAllTags() {
@@ -39,8 +42,12 @@ public class TagServiceImpl implements TagService{
 
 	@Override
 	public TagDTO getTagByNome(String nome) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getTagByNome(" + nome + ") called. Retrieving informations.");
+
+		Tag tag = tagDao.findByNome(nome);
+		TagDTO tagDto = new TagDTO().setNome(tag.getNome());
+		
+		return tagDto;
 	}
 
 }
