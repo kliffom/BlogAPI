@@ -93,6 +93,16 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.7</version>
+				<configuration>
+					<systemPropertyVariables>
+						<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+					</systemPropertyVariables>
+					<excludes>
+						<exclude>it/rdev/blog/api/dao/entity/metamodel/*.class</exclude>
+						<exclude>it/rdev/blog/api/service/ArticoliSpecification.*</exclude>
+						<exclude>it/rdev/blog/api/service/ArticoliSearchCriteria.*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>pre-unit-test</id>

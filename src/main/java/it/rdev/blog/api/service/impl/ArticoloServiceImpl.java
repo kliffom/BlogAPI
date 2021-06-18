@@ -200,7 +200,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 		artic.setCategoria(cat);
 		artic.setTags(tagsEn);
 		
-		logger.info(artic.toString());
+		logger.debug(artic.toString());
 				
 		
 		//Invocare qui ArticoloDao.save(artic); // Per rendere persistente l'oggetto nel DB

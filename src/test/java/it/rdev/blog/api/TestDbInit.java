@@ -22,6 +22,13 @@ import it.rdev.blog.api.dao.entity.User;
 @Sql({"/database_init.sql"})
 public class TestDbInit {
 	
+	protected User user1 = new User();
+	
+	{
+		user1.setUsername("ddinuzzo");
+		user1.setPassword("$2a$10$vj3PqvSqQSsLhknZpxU2oOIUOdmm6cpPu1shwcyXHVzba.xBWLe4K");
+	}
+	
 	@BeforeEach
 	public void populate(
 			@Autowired UserDao userDao,
@@ -31,9 +38,9 @@ public class TestDbInit {
 			) {
 		// Creo e salvo utenti
 		
-		User user1 = new User();
-		user1.setUsername("ddinuzzo");
-		user1.setPassword("$2a$10$vj3PqvSqQSsLhknZpxU2oOIUOdmm6cpPu1shwcyXHVzba.xBWLe4K");
+//		User user1 = new User();
+//		user1.setUsername("ddinuzzo");
+//		user1.setPassword("$2a$10$vj3PqvSqQSsLhknZpxU2oOIUOdmm6cpPu1shwcyXHVzba.xBWLe4K");
 		
 		User user2 = new User();
 		user2.setUsername("pangaro");
