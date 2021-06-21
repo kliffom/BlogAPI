@@ -46,7 +46,7 @@ public class Articolo {
 	@JoinColumn(name="id_users", referencedColumnName = "id")
 	private User user;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name="articoli_tag",
 			joinColumns = @JoinColumn(name="id_articolo"),

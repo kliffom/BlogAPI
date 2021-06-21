@@ -9,6 +9,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -227,7 +228,7 @@ public class ArticoloServiceImplTest extends TestDbInit {
 		tagArt1.add(tag1);
 		
 		ArticoloDTO art1 = new ArticoloDTO()
-				.setTitolo("ArticoloNew")
+				.setTitolo("ArticoloNewDaModificare")
 				.setSottotitolo("SottotitoloNew")
 				.setTesto("Testo articolo New")
 				.setCategoria(cat1)
@@ -244,7 +245,14 @@ public class ArticoloServiceImplTest extends TestDbInit {
 		// Controllo se gli elementi nella lista sono corretti
 		articoloGenericTest(savedArt, art1.getTitolo(), art1.getSottotitolo(), art1.getTesto(), cat1.getDescrizione(), userdto.getUsername(), art1.isBozza(), tag1.getNome());
 		
-		art1.setTitolo("ArticoloUpdate")
+		
+		// Prendo l'articolo dal DB così da avere l'ID corretto per eseguire la modifica 
+		
+		List<ArticoloDTO> artList = articoloServiceNoMock.getAllArticoliByContenuto("DaModificare");
+		
+		ArticoloDTO artMod = artList.get(0);
+		
+		artMod.setTitolo("ArticoloUpdate")
 			.setSottotitolo("SottotitoloUpdate")
 			.setTesto("Testo articolo Update")
 			.setCategoria(cat1)
@@ -253,13 +261,32 @@ public class ArticoloServiceImplTest extends TestDbInit {
 			.setData_creazione(LocalDateTime.now())
 			.setTags(tagArt1);
 		
-		Articolo updatedArt = articoloServiceNoMock.update(art1, userdto.getUsername());
+		Articolo updatedArt = articoloServiceNoMock.update(artMod, userdto.getUsername());
 		
 		// Controllo se l'articolo viene restituito
 		assertNotNull(updatedArt, "Articoli list should not be null");
 		
 		// Controllo se gli elementi nella lista sono corretti
-		articoloGenericTest(updatedArt, art1.getTitolo(), art1.getSottotitolo(), art1.getTesto(), cat1.getDescrizione(), userdto.getUsername(), art1.isBozza(), tag1.getNome());
+		articoloGenericTest(updatedArt, artMod.getTitolo(), artMod.getSottotitolo(), artMod.getTesto(), cat1.getDescrizione(), userdto.getUsername(), artMod.isBozza(), tag1.getNome());
+		
+//		L'update non può essere testata, non ho modo di individuare in automatico l'id fornito dal db all'articolo precedente
+//		
+//		art1.setTitolo("ArticoloUpdate")
+//			.setSottotitolo("SottotitoloUpdate")
+//			.setTesto("Testo articolo Update")
+//			.setCategoria(cat1)
+//			.setUser(userdto)
+//			.setBozza(true)
+//			.setData_creazione(LocalDateTime.now())
+//			.setTags(tagArt1);
+//		
+//		Articolo updatedArt = articoloServiceNoMock.update(art1, userdto.getUsername());
+//		
+//		// Controllo se l'articolo viene restituito
+//		assertNotNull(updatedArt, "Articoli list should not be null");
+//		
+//		// Controllo se gli elementi nella lista sono corretti
+//		articoloGenericTest(updatedArt, art1.getTitolo(), art1.getSottotitolo(), art1.getTesto(), cat1.getDescrizione(), userdto.getUsername(), art1.isBozza(), tag1.getNome());
 	}
 	
 	
@@ -268,12 +295,12 @@ public class ArticoloServiceImplTest extends TestDbInit {
 	void deleteTest() {
 		
 		// Prelevo un articolo in modo da avere l'ID da eliminare
-		List<ArticoloDTO> allArt = articoloServiceNoMock.getAllArticoli();
+		List<ArticoloDTO> allArt = articoloServiceNoMock.getAllArticoliByUser(user1.getUsername());
 		ArticoloDTO art = allArt.get(0);
 		
 		articoloServiceNoMock.delete(art.getId());
 		
-		assertThrows(NullPointerException.class, () -> articoloServiceNoMock.getArticoloById(art.getId()), "Get on deleted Articolo should throw an exception");
+		assertThrows(NoSuchElementException.class, () -> articoloServiceNoMock.getArticoloById(art.getId()), "Get on deleted Articolo should throw an exception");
 	}
 	
 	/**
