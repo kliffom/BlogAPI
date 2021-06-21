@@ -92,6 +92,16 @@ public interface ArticoloDao extends CrudRepository<Articolo, Long>{
 	List<Articolo> findAllByUser(@Param("username") String username);
 	
 	
+	/**
+	 * Restituisce la lista di articoli scritti da un autore che non sono in bozza
+	 * @param author - nome utente autore articolo
+	 */
+	@Query("SELECT a FROM Articolo a "
+			+ "JOIN a.user u "
+			+ "WHERE u.username = :author AND a.bozza=FALSE")
+	List<Articolo> findAllByAuthor(@Param("author") String author);
+	
+	
 	
 	/**
 	 * Restituisce una lista di articoli. 

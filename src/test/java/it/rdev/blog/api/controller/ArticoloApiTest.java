@@ -35,6 +35,8 @@ public class ArticoloApiTest extends TestDbInit{
 	
 	private ArticoloApiTest() { }
 	
+	/******** SEZIONE GET DEGLI ARTICOLI ********/
+	
 	/**
 	 * Testing GET /api/articolo con tabella vuota
 	 */
@@ -64,18 +66,132 @@ public class ArticoloApiTest extends TestDbInit{
 	}
 	
 	/**
-	 * Testing GET /api/articolo con non tabella vuota con login. 
+	 * Testing GET /api/articolo?search='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per titolo, sottotitolo o testo.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginSearchCriteriaTest")
+	void getNonEmptyArticleListNoLoginSearchCriteriaTest() {
+		
+		client.get().uri("/api/articolo?search=icolo")
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+
+		client.get().uri("/api/articolo?search=nonpresente")
+		.exchange().expectStatus().isNotFound(); // Atteso codice 404 quando la tabella Articolo non restituisce niente
+	}
+	
+	/**
+	 * Testing GET /api/articolo?id='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per id.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginIdCriteriaTest")
+	void getNonEmptyArticleListNoLoginIdCriteriaTest() {
+		
+		client.get().uri("/api/articolo?id=2")
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+
+		client.get().uri("/api/articolo?id=5")
+		.exchange().expectStatus().isNotFound(); // Atteso codice 404 quando la tabella Articolo non restituisce niente
+	}
+	
+	/**
+	 * Testing GET /api/articolo?cat='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per categoria.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginCategoryCriteriaTest")
+	void getNonEmptyArticleListNoLoginCategoryCriteriaTest() {
+		
+		client.get().uri("/api/articolo?cat=Tecnologia")
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+
+		client.get().uri("/api/articolo?cat=CategoriaNonEsistente")
+		.exchange().expectStatus().isNotFound(); // Atteso codice 404 quando la tabella Articolo non restituisce niente
+	}
+	
+	/**
+	 * Testing GET /api/articolo?tag='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per tag.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginTagCriteriaTest")
+	void getNonEmptyArticleListNoLoginTagCriteriaTest() {
+		
+		client.get().uri("/api/articolo?tag=Programmazione")
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+
+		client.get().uri("/api/articolo?tag=TagNonEsistente")
+		.exchange().expectStatus().isNotFound(); // Atteso codice 404 quando la tabella Articolo non restituisce niente
+	}
+	
+	/**
+	 * Testing GET /api/articolo?aut='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per autore.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginAuthorCriteriaTest")
+	void getNonEmptyArticleListNoLoginAuthorCriteriaTest() {
+		
+		client.get().uri("/api/articolo?aut=pangaro")
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+
+		client.get().uri("/api/articolo?aut=AutoreNonEsistente")
+		.exchange().expectStatus().isNotFound(); // Atteso codice 404 quando la tabella Articolo non restituisce niente
+	}
+
+	/**
+	 * Testing GET /api/articolo?stato='' con non tabella vuota senza login 
+	 * utilizzando un criterio di ricerca per bozza per gli utenti loggati.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginBozzaCriteriaTest")
+	void getNonEmptyArticleListNoLoginBozzaCriteriaTest() {
+		
+		client.get().uri("/api/articolo?stato=BOZZA")
+		.exchange().expectStatus().isUnauthorized(); // Atteso codice 401 quando l'utente non è loggato e vuole vedere gli articoli in bozza
+
+	}
+	
+	/**
+	 * Testing GET /api/articolo?stato='' con non tabella vuota con login 
+	 * utilizzando un criterio di ricerca per bozza per gli utenti loggati.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListLoginBozzaCriteriaTest")
+	void getNonEmptyArticleListLoginBozzaCriteriaTest() {
+		
+		client.get().uri("/api/articolo?stato=BOZZA")
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))
+		.exchange().expectStatus().isOk(); // Atteso codice 200 quando l'utente è loggato e vuole vedere gli articoli in bozza inserendo BOZZA
+
+		client.get().uri("/api/articolo?stato=ALTRO")
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))
+		.exchange().expectStatus().isBadRequest(); // Atteso codice 400 quando l'utente è loggato e vuole vedere gli articoli in bozza non inserendo BOZZA
+	}
+
+	
+	/**
+	 * Testing GET /api/articolo con tabella non vuota con login. 
 	 * La chiamata dovrebbe restituire anche articoli in bozza dell'utente attuale.
 	 */
 	@Test
 	@DisplayName("ArticoloApiTest - getNonEmptyArticleListLoginTest")
 	void getNonEmptyArticleListLoginTest() {
 		
-		client.get().uri("/api/articolo")
-		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro"))
-		.exchange().expectStatus().isOk() // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
-		.expectBody().jsonPath("$[1].bozza").isEqualTo(true); //Controllo che l'articolo restituito sia con bozza = true in quanto il secondo articolo aggiunto in TestDbInit è una bozza
+//		client.get().uri("/api/articolo")
+//		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))
+//		.exchange().expectStatus().isOk() // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+//		.expectBody().jsonPath("$[1].bozza").isEqualTo(true); //Controllo che l'articolo restituito sia con bozza = true in quanto il secondo articolo aggiunto in TestDbInit è una bozza
 		
+		String s = new String(
+				client.get().uri("/api/articolo")
+				.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))
+				.exchange().expectBody().returnResult().getResponseBody()
+				);
+		
+		System.out.println("JSON in /api/articolo:");
+		System.out.println(s);
 	}
 	
 	/**
@@ -108,7 +224,7 @@ public class ArticoloApiTest extends TestDbInit{
 	void getExistingArticleBozzaLoggedNonAuthorByIdTest() {
 		
 		client.get().uri("/api/articolo/1")
-		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
 		.exchange().expectStatus().isNotFound();
 	}
 	
@@ -120,8 +236,9 @@ public class ArticoloApiTest extends TestDbInit{
 	void getExistingArticleBozzaLoggedAuthorByIdTest() {
 		
 		client.get().uri("/api/articolo/3")
-		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
-		.exchange().expectStatus().isOk();
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
+		.exchange().expectStatus().isOk()
+		.expectBody().jsonPath("$.titolo").isEqualTo(art3.getTitolo());
 	}
 	
 	/**
@@ -132,8 +249,11 @@ public class ArticoloApiTest extends TestDbInit{
 	void getExistingArticleByIdTest() {
 		
 		client.get().uri("/api/articolo/2")
-		.exchange().expectStatus().isOk();
+		.exchange().expectStatus().isOk()
+		.expectBody().jsonPath("$.titolo").isEqualTo(art2.getTitolo());
 	}
+	
+	/******* SEZIONE ACCESSI AUTORIZZATI PER AGGIUNTA, MODIFICA ED ELIMINAZIONE ********/
 	
 	/**
 	 * Testing POST /api/articolo senza login

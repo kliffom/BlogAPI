@@ -97,7 +97,7 @@ public class ArticoloController {
 			}
 			if(aut!=null) { // Eseguo ricerca per autore
 				logger.info("Ricerco articoli con autore " + aut + ".");
-				allArticAut = articoloServiceImpl.getAllArticoliByUser(aut);
+				allArticAut = articoloServiceImpl.getAllArticoliByAuthor(aut);
 				allArtic = allArticAut;
 			}
 			if(stato!=null) { // Eseguo ricerca per stato

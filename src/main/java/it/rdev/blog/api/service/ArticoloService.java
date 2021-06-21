@@ -20,6 +20,8 @@ public interface ArticoloService {
 	
 	List<ArticoloDTO> getAllArticoliInBozza(String username);
 	
+	List<ArticoloDTO> getAllArticoliByAuthor(String username);
+	
 	List<ArticoloDTO> getAllArticoliByContenuto(String searchValue);
 	
 	ArticoloDTO getArticoloById(long id);
@@ -29,4 +31,6 @@ public interface ArticoloService {
 	Articolo update(ArticoloDTO articolo, String username);
 	
 	void delete(Long idArticolo);
+
+
 }

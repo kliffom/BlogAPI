@@ -101,6 +101,22 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 	
 	/**
+	 * Restituisce una lista contenente tutti gli articoli pubblicati, 
+	 * più quelli in stato di bozza scritti da 'username'
+	 */
+	@Override
+	public List<ArticoloDTO> getAllArticoliByAuthor(String username) {
+		
+		logger.info("getAllArticoliByUser(" + username + ") called. Retrieving informations.");
+		//List<Articolo> allArticoli = (List<Articolo>) articoloDao.findByAutore(username);
+		List<Articolo> allArticoli = (List<Articolo>) articoloDao.findAllByAuthor(username);
+		
+		List<ArticoloDTO> allArticoliDto = convertListArticoloToDTO(allArticoli);
+		
+		return allArticoliDto;
+	}
+	
+	/**
 	 * Restituisce una lista contenente tutti gli articoli che appartengono ad una determinata categoria
 	 */
 	@Override
