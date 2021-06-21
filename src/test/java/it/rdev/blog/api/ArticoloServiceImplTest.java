@@ -269,24 +269,6 @@ public class ArticoloServiceImplTest extends TestDbInit {
 		// Controllo se gli elementi nella lista sono corretti
 		articoloGenericTest(updatedArt, artMod.getTitolo(), artMod.getSottotitolo(), artMod.getTesto(), cat1.getDescrizione(), userdto.getUsername(), artMod.isBozza(), tag1.getNome());
 		
-//		L'update non può essere testata, non ho modo di individuare in automatico l'id fornito dal db all'articolo precedente
-//		
-//		art1.setTitolo("ArticoloUpdate")
-//			.setSottotitolo("SottotitoloUpdate")
-//			.setTesto("Testo articolo Update")
-//			.setCategoria(cat1)
-//			.setUser(userdto)
-//			.setBozza(true)
-//			.setData_creazione(LocalDateTime.now())
-//			.setTags(tagArt1);
-//		
-//		Articolo updatedArt = articoloServiceNoMock.update(art1, userdto.getUsername());
-//		
-//		// Controllo se l'articolo viene restituito
-//		assertNotNull(updatedArt, "Articoli list should not be null");
-//		
-//		// Controllo se gli elementi nella lista sono corretti
-//		articoloGenericTest(updatedArt, art1.getTitolo(), art1.getSottotitolo(), art1.getTesto(), cat1.getDescrizione(), userdto.getUsername(), art1.isBozza(), tag1.getNome());
 	}
 	
 	
