@@ -1,4 +1,4 @@
-package it.rdev.blog.api;
+package it.rdev.blog.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import it.rdev.blog.api.TestDbInit;
 import it.rdev.blog.api.dao.UserDao;
 import it.rdev.blog.api.dao.entity.User;
 import it.rdev.blog.api.parameters.UserParameterResolver;

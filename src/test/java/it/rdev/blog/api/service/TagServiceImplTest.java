@@ -1,4 +1,4 @@
-package it.rdev.blog.api;
+package it.rdev.blog.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

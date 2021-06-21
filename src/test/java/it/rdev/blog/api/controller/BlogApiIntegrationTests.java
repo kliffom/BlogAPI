@@ -1,4 +1,4 @@
-package it.rdev.blog.api;
+package it.rdev.blog.api.controller;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import it.rdev.blog.api.TestDbInit;
 
 @SpringBootTest(webEnvironment=RANDOM_PORT)
 @DisplayName("<= BlogApiIntegration Test =>")

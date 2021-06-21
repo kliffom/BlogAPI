@@ -1,4 +1,4 @@
-package it.rdev.blog.api;
+package it.rdev.blog.api.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import it.rdev.blog.api.TestDbInit;
 import it.rdev.blog.api.dao.TagDao;
 import it.rdev.blog.api.dao.entity.Tag;
 
@@ -51,19 +52,10 @@ public class TagApiTest extends TestDbInit{
 		.exchange().expectStatus().isOk(); // Atteso codice 200 se ci sono tag
 		//.expectBody().jsonPath("$.nome").isEqualTo(t.getNome());
 		
-		String s = new String(client.get().uri("/api/tag").accept(MediaType.APPLICATION_JSON)
-				.exchange()
-				.expectBody().returnResult().getResponseBody());
+		client.get().uri("/api/tag").accept(MediaType.APPLICATION_JSON)
+		.exchange().expectStatus().isOk()
+		.expectBody().jsonPath("$[0].nome").isEqualTo(t.getNome());
 		
-		System.out.println(s);
-//		client.get().uri("/api/tag")
-//		.contentType(MediaType.APPLICATION_JSON)
-//		.bodyValue("[ { \"nome\": \"testTag\" } ]")
-//		.exchange()
-//		.expectStatus()
-//		.isOk()
-//		.expectBody()
-//		.jsonPath("$.username").isEqualTo("utenteTest01");
 	}
 	
 }

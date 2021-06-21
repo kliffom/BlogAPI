@@ -1,4 +1,4 @@
-package it.rdev.blog.api;
+package it.rdev.blog.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import it.rdev.blog.api.TestDbInit;
 import it.rdev.blog.api.controller.dto.ArticoloDTO;
 import it.rdev.blog.api.controller.dto.CategoriaDTO;
 import it.rdev.blog.api.controller.dto.TagDTO;
