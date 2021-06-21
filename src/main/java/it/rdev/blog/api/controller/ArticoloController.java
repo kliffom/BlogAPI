@@ -264,6 +264,11 @@ public class ArticoloController {
 			} catch(NoSuchElementException e) { // Se non trova l'elemento va in eccezione, la gestisco per lanciare l'errore 404  
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
 			}
+			try {
+				artDto = articoloServiceImpl.getArticoloById(id);
+			} catch(NoSuchElementException e) { // Se non trova l'elemento va in eccezione, la gestisco per lanciare l'errore 404  
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
+			}
 			
 			if(!artDto.getUser().getUsername().equals(getUsernameFromToken(token))) { // Utente loggato differente dall'autore
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Utente loggato differente da autore articolo.");
@@ -289,9 +294,16 @@ public class ArticoloController {
 		
 		String username = getUsernameFromToken(token);
 		
-		//TODO correggere problema di get solo bozza quando loggato
 		
-		ArticoloDTO artic = articoloServiceImpl.getArticoloById(id);
+		
+		
+		
+		ArticoloDTO artic = null;
+		try {
+			artic = articoloServiceImpl.getArticoloById(id);
+		} catch(NoSuchElementException e) { // Se non trova l'elemento va in eccezione, la gestisco per lanciare l'errore 404  
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non presente nel sistema.");
+		}
 		if(artic==null)		// Articolo non trovato
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non trovato.");
 		else {				// Articolo trovato

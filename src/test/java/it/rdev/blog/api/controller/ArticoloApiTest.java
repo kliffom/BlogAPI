@@ -50,15 +50,43 @@ public class ArticoloApiTest extends TestDbInit{
 	}
 	
 	/**
-	 * Testing GET /api/articolo con non tabella vuota
+	 * Testing GET /api/articolo con non tabella vuota senza login. 
+	 * La chiamata dovrebbe restituire solo articoli non in bozza
 	 */
 	@Test
-	@DisplayName("ArticoloApiTest - getNonEmptyArticleListTest")
-	void getNonEmptyArticleListTest() {
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginTest")
+	void getNonEmptyArticleListNoLoginTest() {
 		
 		client.get().uri("/api/articolo")
-		.exchange().expectStatus().isOk(); // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+		.exchange().expectStatus().isOk() // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+		.expectBody().jsonPath("$[0].bozza").isEqualTo(false); //Controllo che l'articolo restituito sia con bozza = false
 		
+	}
+	
+	/**
+	 * Testing GET /api/articolo con non tabella vuota con login. 
+	 * La chiamata dovrebbe restituire anche articoli in bozza dell'utente attuale.
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListLoginTest")
+	void getNonEmptyArticleListLoginTest() {
+		
+		client.get().uri("/api/articolo")
+		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro"))
+		.exchange().expectStatus().isOk() // Atteso codice 200 quando la tabella Articolo restituisce qualcosa
+		.expectBody().jsonPath("$[1].bozza").isEqualTo(true); //Controllo che l'articolo restituito sia con bozza = true in quanto il secondo articolo aggiunto in TestDbInit è una bozza
+		
+	}
+	
+	/**
+	 * Testing GET /api/articolo/id con la tupla non esistente nel db 
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonExistingArticleByIdTest")
+	void getNonExistingArticleByIdTest() {
+		
+		client.get().uri("/api/articolo/1")
+		.exchange().expectStatus().isNotFound();
 	}
 	
 	/**

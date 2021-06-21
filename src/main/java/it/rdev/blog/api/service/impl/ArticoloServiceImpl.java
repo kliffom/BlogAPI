@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -161,7 +162,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 	 * Restituisce un articolo in base all'id ricevuto
 	 */
 	@Override
-	public ArticoloDTO getArticoloById(long id) {
+	public ArticoloDTO getArticoloById(long id) throws NoSuchElementException{
 	
 		logger.info("getArticoloById(" + id + ") called. Retrieving informations.");
 		Optional<Articolo> artResult = articoloDao.findById(id);
