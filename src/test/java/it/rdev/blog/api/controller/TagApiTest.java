@@ -48,9 +48,9 @@ public class TagApiTest extends TestDbInit{
 		Tag t = new Tag().setNome("testTag");
 		tagDao.save(t);
 		
-		client.get().uri("/api/tag") // .accept(MediaType.APPLICATION_JSON)
+		client.get().uri("/api/tag")
 		.exchange().expectStatus().isOk(); // Atteso codice 200 se ci sono tag
-		//.expectBody().jsonPath("$.nome").isEqualTo(t.getNome());
+		
 		
 		client.get().uri("/api/tag").accept(MediaType.APPLICATION_JSON)
 		.exchange().expectStatus().isOk()
