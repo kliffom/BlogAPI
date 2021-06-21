@@ -1,3 +1,21 @@
+
+
+-- Droppo le tabelle per avere gli id che ripartono da 0 per poter eseguire i test
+
+-- DROP TABLE users;
+-- DROP TABLE categoria;
+-- DROP TABLE articoli;
+-- DROP TABLE tag;
+-- DROP TABLE articoli_tag;
+
+-- Droppo le tabelle per avere gli id che ripartono da 0 per poter eseguire i test
+
+DROP DATABASE BlogTest;
+
+CREATE DATABASE BlogTest;
+
+USE BlogTest;
+
 CREATE TABLE IF NOT EXISTS users (
   id bigint unsigned NOT NULL AUTO_INCREMENT,
   username varchar(50) NOT NULL,

@@ -85,8 +85,54 @@ public class ArticoloApiTest extends TestDbInit{
 	@DisplayName("ArticoloApiTest - getNonExistingArticleByIdTest")
 	void getNonExistingArticleByIdTest() {
 		
+		client.get().uri("/api/articolo/10")
+		.exchange().expectStatus().isNotFound();
+	}
+	
+	/**
+	 * Testing GET /api/articolo/id con la tupla esistente ma in stato di bozza 
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getExistingArticleBozzaNotLoggedByIdTest")
+	void getExistingArticleBozzaNotLoggedByIdTest() {
+		
 		client.get().uri("/api/articolo/1")
 		.exchange().expectStatus().isNotFound();
+	}
+	
+	/**
+	 * Testing GET /api/articolo/id con la tupla esistente ma in stato di bozza e di un utente diverso dall'autore
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getExistingArticleBozzaLoggedNonAuthorByIdTest")
+	void getExistingArticleBozzaLoggedNonAuthorByIdTest() {
+		
+		client.get().uri("/api/articolo/1")
+		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
+		.exchange().expectStatus().isNotFound();
+	}
+	
+	/**
+	 * Testing GET /api/articolo/id con la tupla esistente ma in stato di bozza
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getExistingArticleBozzaLoggedAuthorByIdTest")
+	void getExistingArticleBozzaLoggedAuthorByIdTest() {
+		
+		client.get().uri("/api/articolo/3")
+		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro")) // Utente non autore dell'articolo con ID 1
+		.exchange().expectStatus().isOk();
+	}
+	
+	/**
+	 * Testing GET /api/articolo/id con la tupla esistente nel db 
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getExistingArticleByIdTest")
+	void getExistingArticleByIdTest() {
+		
+		client.get().uri("/api/articolo/2")
+		.exchange().expectStatus().isOk();
 	}
 	
 	/**
