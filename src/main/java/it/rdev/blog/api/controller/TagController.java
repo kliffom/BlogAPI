@@ -24,7 +24,7 @@ public class TagController {
 	public ResponseEntity<?> getTags() {
 		
 		final List<TagDTO> allTag = tagServiceImpl.getAllTags();
-		if(allTag!=null) 
+		if(allTag!=null && !allTag.isEmpty()) 
 			return ResponseEntity.ok(allTag);
 		else 
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun tag presente.");

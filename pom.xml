@@ -98,9 +98,14 @@
 						<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
 					</systemPropertyVariables>
 					<excludes>
-						<exclude>it/rdev/blog/api/dao/entity/metamodel/*.class</exclude>
-						<exclude>it/rdev/blog/api/service/ArticoliSpecification.*</exclude>
-						<exclude>it/rdev/blog/api/service/ArticoliSearchCriteria.*</exclude>
+<!-- 					<exclude>it/rdev/blog/api/dao/entity/metamodel/*.class</exclude>  	  -->
+<!--					<exclude>it/rdev/blog/api/service/ArticoliSpecification.*</exclude>   -->
+<!--					<exclude>it/rdev/blog/api/service/ArticoliSearchCriteria.*</exclude>  -->
+						<exclude>**/*it/rdev/blog/api/service/*Specification.*</exclude>
+						<exclude>**/*it/rdev/blog/api/service/*Criteria.*</exclude>
+						<exclude>**/*_.*</exclude>
+						<exclude>**/*Specification.*</exclude>
+						<exclude>**/*Criteria.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>

@@ -24,7 +24,7 @@ public class CategoriaController {
 	public ResponseEntity<?> getCategorie() {
 		
 		final List<CategoriaDTO> allCat = categoriaServiceImpl.getAllCategorie();
-		if(allCat!=null)
+		if(allCat!=null && !allCat.isEmpty())
 			return ResponseEntity.ok(allCat);
 		else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessuna categoria presente.");
