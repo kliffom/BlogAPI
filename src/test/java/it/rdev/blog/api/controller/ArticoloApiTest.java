@@ -319,7 +319,7 @@ public class ArticoloApiTest extends TestDbInit{
 		client.put().uri("/api/articolo/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
-					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\" "
 					+ " }") 									// Body JSON dell'articolo da modificare
 			.exchange().expectStatus().isUnauthorized();
 	}
@@ -334,7 +334,7 @@ public class ArticoloApiTest extends TestDbInit{
 		client.put().uri("/api/articolo/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
-					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\" "
 					+ " }") 									// Body JSON dell'articolo da modificare
 			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è differente da quello dell'articolo
 			.exchange().expectStatus().isForbidden();
@@ -350,7 +350,7 @@ public class ArticoloApiTest extends TestDbInit{
 		client.put().uri("/api/articolo/100")
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
-					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\" "
 					+ " }") 									// Body JSON dell'articolo da modificare
 			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è differente da quello dell'articolo
 			.exchange().expectStatus().isNotFound();
@@ -366,10 +366,10 @@ public class ArticoloApiTest extends TestDbInit{
 		client.put().uri("/api/articolo/2") 		// L'articolo con ID 2 non è in bozza
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
-					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\" "
 					+ " }") 									// Body JSON dell'articolo da modificare
 			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
-			.exchange().expectStatus().is4xxClientError();
+			.exchange().expectStatus().is4xxClientError(); //WebTestClient non gestisce HTTP Code 418 I'm a Teapot
 	}
 	
 	/**
@@ -382,7 +382,7 @@ public class ArticoloApiTest extends TestDbInit{
 		client.put().uri("/api/articolo/3") 		// L'articolo con ID 3 è in bozza
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
-					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\" "
 					+ " }") 									// Body JSON dell'articolo da modificare
 			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
 			.exchange().expectStatus().isNoContent();
