@@ -320,9 +320,121 @@ public class ArticoloApiTest extends TestDbInit{
 			.contentType(MediaType.APPLICATION_JSON)
 			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
 					+ "\"testo\":\"Nuovo testo modificato\", "
-					+ " }") 									// Body JSON dell'articolo da aggiungere
+					+ " }") 									// Body JSON dell'articolo da modificare
 			.exchange().expectStatus().isUnauthorized();
 	}
+	
+	/**
+	 * Testing PUT /api/articolo/id con login ma utente sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - putEditArticoloLoggedWrongUserTest\"")
+	void putEditArticoloLoggedWrongUserTest() {
+		
+		client.put().uri("/api/articolo/1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ " }") 									// Body JSON dell'articolo da modificare
+			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è differente da quello dell'articolo
+			.exchange().expectStatus().isForbidden();
+	}
+	
+	/**
+	 * Testing PUT /api/articolo/id con login ma ID sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - putEditArticoloLoggedWrongIdTest\"")
+	void putEditArticoloLoggedWrongIdTest() {
+		
+		client.put().uri("/api/articolo/100")
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ " }") 									// Body JSON dell'articolo da modificare
+			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è differente da quello dell'articolo
+			.exchange().expectStatus().isNotFound();
+	}
+	
+	/**
+	 * Testing PUT /api/articolo/id con login ma ID sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - putEditArticoloLoggedNonBozzaTest\"")
+	void putEditArticoloLoggedNonBozzaTest() {
+		
+		client.put().uri("/api/articolo/2") 		// L'articolo con ID 2 non è in bozza
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ " }") 									// Body JSON dell'articolo da modificare
+			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
+			.exchange().expectStatus().is4xxClientError();
+	}
+	
+	/**
+	 * Testing PUT /api/articolo/id con login ma ID sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - putEditArticoloLoggedTest\"")
+	void putEditArticoloLoggedTest() {
+		
+		client.put().uri("/api/articolo/3") 		// L'articolo con ID 3 è in bozza
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ " }") 									// Body JSON dell'articolo da modificare
+			.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
+			.exchange().expectStatus().isNoContent();
+	}
+	
+	/**
+	 * Testing DELETE /api/articolo/id senza login 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - deleteArticoloNonLoggedTest\"")
+	void deleteArticoloNonLoggedTest() {
+		
+		client.delete().uri("/api/articolo/1")
+		.exchange().expectStatus().isUnauthorized();
+	}
+	
+	/**
+	 * Testing DELETE /api/articolo/id con login ma utente sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - deleteArticoloLoggedWrongUserTest\"")
+	void deleteArticoloLoggedWrongUserTest() {
+		
+		client.delete().uri("/api/articolo/1")
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
+		.exchange().expectStatus().isForbidden();
+	}
+	
+	/**
+	 * Testing DELETE /api/articolo/id con login ma id sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - deleteArticoloLoggedWrongIdTest\"")
+	void deleteArticoloLoggedWrongIdTest() {
+		
+		client.delete().uri("/api/articolo/10")
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
+		.exchange().expectStatus().isNotFound();
+	}
+	
+	/**
+	 * Testing DELETE /api/articolo/id con login ma utente sbagliato 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - deleteArticoloLoggedTest\"")
+	void deleteArticoloLoggedTest() {
+		
+		client.delete().uri("/api/articolo/3")
+		.header("Authorization", "Bearer " + login(user2.getUsername(), "pangaro"))	// L'utente è uguale a quello dell'autore
+		.exchange().expectStatus().isNoContent();
+	}
+	
 	
 	
 	/**
