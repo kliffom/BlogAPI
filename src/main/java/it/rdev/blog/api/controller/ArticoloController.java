@@ -81,8 +81,17 @@ public class ArticoloController {
 			
 			if(id!=null) { // Eseguo ricerca per id
 				logger.info("Ricerco articoli con id " + id + ".");
-				ArticoloDTO artById = articoloServiceImpl.getArticoloById(id);
-				allArticId.add(artById);
+
+//				ArticoloDTO artById = articoloServiceImpl.getArticoloById(id);
+				ArticoloDTO artById = null;
+				try {
+					artById = articoloServiceImpl.getArticoloById(id); // il metodo lancia eccezione quando non trova ID, mandando in blocco il sistema
+				}
+				catch(NoSuchElementException e) {
+					logger.info("Nessuna tupla trovata con l'ID specificato.");
+				}
+				if(artById!=null) // Se l'ID non è presente nel sistema, artById null verrebbe comunque aggiunto all'array non restituendo l'errore 404
+					allArticId.add(artById);
 				allArtic = allArticId; // assegno su allArtic per poter fare la ricerca comune successivamente
 			}
 			if(cat!=null) { // Eseguo ricerca per categoria

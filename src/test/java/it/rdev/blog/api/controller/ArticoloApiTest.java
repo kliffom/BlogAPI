@@ -291,6 +291,38 @@ public class ArticoloApiTest extends TestDbInit{
 		
 	}
 	
+	/**
+	 * Testing POST /api/articolo con login con parametri necessari mancanti
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - postAddArticleLoggedBadParamTest\"")
+	void postAddArticleLoggedBadParamTest() {
+		
+		client.post().uri("/api/articolo")
+		.contentType(MediaType.APPLICATION_JSON)
+		.bodyValue("{ \"titolo\":\"" + art1.getTitolo() + "\", "
+//				+ "\"testo\":\"" + art1.getTesto() + "\", "			// Commento la sezione del testo così da avere una Bad Request
+				+ "\"categoria\":{\"descrizione\":\"" + art1.getCategoria().getDescrizione() + "\"}, "
+				+ "\"tags\":[{\"nome\":\"" + art1.getTags().get(0).getNome() + "\"}] "
+				+ " }") 									// Body JSON dell'articolo da aggiungere
+		.header("Authorization", "Bearer " + login(art1.getUser().getUsername(), "pangaro"))			// Header contenente il token ricevuto dal login
+		.exchange().expectStatus().isBadRequest();
+	}
+	
+	/**
+	 * Testing PUT /api/articolo/id senza login 
+	 */
+	@Test
+	@DisplayName("\"ArticoloApiTest - putEditArticoloNoLoggedTest\"")
+	void putEditArticoloNoLoggedTest() {
+		
+		client.put().uri("/api/articolo/1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue("{ \"titolo\":\"NuovoTitoloModificato\", "
+					+ "\"testo\":\"Nuovo testo modificato\", "
+					+ " }") 									// Body JSON dell'articolo da aggiungere
+			.exchange().expectStatus().isUnauthorized();
+	}
 	
 	
 	/**
