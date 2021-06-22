@@ -62,7 +62,7 @@ public class ArticoloController {
 				logger.error("Passati entrambi i criteri di ricerca. Solo uno ammesso.");
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametri di ricerca non corretti.");
 			}
-			else if(search.length()<2) {	// La ricerca per contenuto contiene pochi caratteri
+			else if(search.length()<3) {	// La ricerca per contenuto contiene pochi caratteri
 				logger.error("Passati meno di 3 caratteri per la ricerca.");
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La ricerca deve contenere almeno 3 caratteri.");
 			}

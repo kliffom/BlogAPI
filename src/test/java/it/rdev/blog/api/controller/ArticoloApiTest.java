@@ -81,6 +81,30 @@ public class ArticoloApiTest extends TestDbInit{
 	}
 	
 	/**
+	 * Testing GET /api/articolo?search=''&cat='' che dovrebbe andare in Bad Request in quanto non sono ammessi questi parametri in combo
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginWrongSearchCriteriaTest")
+	void getNonEmptyArticleListNoLoginWrongSearchCriteriaTest() {
+		
+		client.get().uri("/api/articolo?search=ic")
+		.exchange().expectStatus().isBadRequest(); // Atteso codice 400 quando si esegue la ricerca su search con meno di 3 caratteri
+
+	}
+	
+	/**
+	 * Testing GET /api/articolo?search=''&cat='' che dovrebbe andare in Bad Request in quanto non sono ammessi questi parametri in combo
+	 */
+	@Test
+	@DisplayName("ArticoloApiTest - getNonEmptyArticleListNoLoginSearchAndCatCriteriaTest")
+	void getNonEmptyArticleListNoLoginSearchAndCatCriteriaTest() {
+		
+		client.get().uri("/api/articolo?search=icolo&cat=asd")
+		.exchange().expectStatus().isBadRequest(); // Atteso codice 400 quando si esegue la ricerca contemporaneamente su search e cat
+
+	}
+	
+	/**
 	 * Testing GET /api/articolo?id='' con non tabella vuota senza login 
 	 * utilizzando un criterio di ricerca per id.
 	 */
